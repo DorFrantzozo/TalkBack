@@ -45,10 +45,12 @@ function ResponsiveAppBar() {
 
   return (
     <ThemeProvider theme={theme}>
-      <AppBar position="static" sx={{ bgcolor: "#3DB250", marginBottom:"60px"}}>
+      <AppBar position="static" sx={{ bgcolor: "#3DB250" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <img src={myLogo} width={"200px"}></img>
+            <a href="http://localhost:5173/">
+              <img src={myLogo} width={"200px"}></img>
+            </a>
             <Typography
               variant="h6"
               noWrap
