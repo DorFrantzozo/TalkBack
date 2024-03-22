@@ -5,7 +5,8 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../assets/Themes/colors";
 
-export default function Landing() {
+
+const Landing = () => {
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -68,4 +69,5 @@ export default function Landing() {
       </ThemeProvider>
     </>
   );
-}
+};
+export default Landing;

@@ -7,6 +7,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import SendIcon from "@mui/icons-material/Send";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../assets/Themes/colors";
+
 export default function Chat() {
   return (
     <>
@@ -34,11 +35,10 @@ export default function Chat() {
                 <HisChat />
 
                 <Box
-                height={600}
+                  height={600}
                   sx={{
                     display: "flex",
-                    alignSelf:"center"
-                    
+                    alignSelf: "center",
                   }}
                 >
                   <TextField
