@@ -1,50 +1,56 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ChatBubbleOutlineRoundedIcon from "@mui/icons-material/ChatBubbleOutlineRounded";
+import CasinoIcon from "@mui/icons-material/Casino";
+import IconButton from "@mui/material/IconButton";
+
 import { io } from "socket.io-client";
 const socket = io("http://localhost:3001");
-
 const Home = () => {
-  const [onlineUsers, setOnlineUsers] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState([]);
 
-  socket.on("connected", (users) => {
-    console.log(users);
-    if (users) {
-      setOnlineUsers(...[Object.values(users)]);
+  const handleUpdateUsers = (onlineusers) => {
+    if (onlineusers) {
+      setOnlineUsers(onlineusers.filter((user) => user !== socket.id));
     }
-  });
-
-  const handleDisconected = (disconected_user) => {
-    setOnlineUsers((prevUsers) => [
-      prevUsers.filter((user) => user !== disconected_user),
-    ]);
+    console.log(onlineUsers);
   };
 
-  const handleConnected = (user) => {
-    setOnlineUsers((prevUsers) => [...prevUsers, user]);
-  };
   useEffect(() => {
-    // Listen for incoming messages
-    socket.on("user-connected", (user) => {
-      handleConnected(user);
-    });
-    socket.on("user-disconnect", (dis_user) => {
-      handleDisconected(dis_user);
-    });
-    // Clean up the socket connection on unmount
+    // socket.on("connect", () => setSocket(socket)); // Save socket instance to state    });
+    socket.on("updateOnlineUsers", handleUpdateUsers);
+
     return () => {
-      socket.off("user-connected", handleConnected);
-      socket.off("user-disconnect", handleDisconected);
+      socket.off("updateOnlineUsers", handleUpdateUsers);
       socket.disconnect();
     };
   }, []);
 
-  const JoinUser = () => {
-    socket.emit("login", "alon");
-  };
-  const disUser = () => {
-    console.log("disconnecting");
-  };
-
-  return <div></div>;
+  return (
+    <>
+      <List sx={{ width: "100%", maxWidth: 360 }}>
+        {onlineUsers.map((user) => (
+          <ListItem
+            key={user}
+            disableGutters
+            secondaryAction={
+              <>
+                <IconButton aria-label="Chat">
+                  <ChatBubbleOutlineRoundedIcon />
+                </IconButton>
+                <IconButton aria-label="backgammon">
+                  <CasinoIcon />
+                </IconButton>
+              </>
+            }
+          >
+            <ListItemText primary={`Line item ${user}`} />
+          </ListItem>
+        ))}
+      </List>
+    </>
+  );
 };
-
 export default Home;

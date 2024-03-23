@@ -9,22 +9,27 @@ const httpServer = app.listen(port, () => {
 });
 const io = new Server(httpServer, {
   cors: {
-    origin: "http://localhost:5173",
+    origin: "http://localhost:3001",
   },
 });
 
-const users = {};
+const companion = {};
 
 io.on("connection", (socket) => {
-  socket.on("new-user", (name) => {
-    users[socket.id] = name;
-    socket.broadcast.emit("user-connected", name);
+  socket.on("connect", (room) => {
+    if (room === "") throw Error("connection error");
+    else {
+      socket.join(room);
+    }
   });
-  socket.on("send-chat-message", (message) => {
-    socket.broadcast.emit("chat-message", {
-      message: message,
-      name: users[socket.id],
-    });
+  socket.on("send-chat-message", (message, room) => {
+    if (room === "") throw Error("connection error");
+    else {
+      socket.to(room).emit("receive-chat-message", {
+        message: message,
+        name: users[socket.id],
+      });
+    }
   });
   socket.on("disconnect", () => {
     socket.broadcast.emit("user-disconnected", users[socket.id]);
