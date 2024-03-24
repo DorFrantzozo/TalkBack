@@ -15,6 +15,8 @@ import myLogo from "../../assets/Images/Logo.png";
 import { useState } from "react";
 import { theme } from "../../assets/Themes/colors";
 import { ThemeProvider } from "@emotion/react";
+// import { Link as MuiLink } from "@mui/material";
+import { Link } from "react-router-dom";
 
 const pages = ["Game", "Chat", "About"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
@@ -48,9 +50,9 @@ function ResponsiveAppBar() {
       <AppBar position="static" sx={{ bgcolor: "#3DB250" }}>
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <a href="http://localhost:5173/">
+            <Link to="/">
               <img src={myLogo} width={"200px"}></img>
-            </a>
+            </Link>
             <Typography
               variant="h6"
               noWrap
@@ -122,6 +124,8 @@ function ResponsiveAppBar() {
               {pages.map((page) => (
                 <Button
                   key={page}
+                  component={Link}
+                  to={`/${page}`}
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
@@ -175,7 +179,7 @@ function ResponsiveAppBar() {
               </Box>
             ) : (
               <Box sx={{ display: "flex" }}>
-                <a href="/signin">
+                <Link to="/signin">
                   <Button
                     variant="outlined"
                     sx={{
@@ -187,15 +191,15 @@ function ResponsiveAppBar() {
                   >
                     Login
                   </Button>
-                </a>
-                <a href="/signup">
+                </Link>
+                <Link to="/signup">
                   <Button
                     variant="outlined"
                     sx={{ color: "#EFEEEE", borderColor: "#EFEEEE" }}
                   >
                     SignUp
                   </Button>
-                </a>
+                </Link>
               </Box>
             )}
           </Toolbar>
