@@ -34,17 +34,18 @@ export default function Chat() {
                 <HisChat />
 
                 <Box
-                height={600}
+                height={700}
                   sx={{
                     display: "flex",
-                    alignSelf:"center"
+                    alignSelf:"center",
+                    alignItems:"flex-end"
                     
                   }}
                 >
                   <TextField
                     sx={{ width: "100%" }}
                     id="standard-basic"
-                    label="Standard"
+                    label="Type your message here"
                     variant="standard"
                   />
                   <Button
@@ -52,7 +53,7 @@ export default function Chat() {
                     variant="contained"
                     size="small"
                     endIcon={<SendIcon />}
-                    sx={{ height: "40px", marginLeft: "8px" }}
+                    sx={{ height: "40px", marginLeft: "8px", color:"white"}}
                   >
                     Send
                   </Button>
