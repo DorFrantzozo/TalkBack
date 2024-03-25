@@ -5,16 +5,16 @@ import { generateAccessToken, generateRefreshToken } from "../utils/authJwt.js";
 //handle errors
 const handleErrors = (error) => {
   console.log(error.message, error.code);
-  let errors = { username: "", password: "" };
+  let errors = { email: "", password: "" };
 
-  if (error.message === "Username doesnt exist") {
-    errors.username = "that username doesnt registered";
+  if (error.message === "email doesnt exist") {
+    errors.email = "that email doesnt registered";
   }
   if (error.message === "incorrect password") {
     errors.password = "that password is incorrect";
   }
   if (error.code === 11000) {
-    errors.username = "that username is already registered";
+    errors.email = "that email is already registered";
     return errors;
   }
   if (error.message.includes("User validation failed")) {
@@ -27,9 +27,9 @@ const handleErrors = (error) => {
 
 const authController = {
   async signup_post(req, res) {
-    const { username, password } = req.body;
+    const { email, password, firstName, lastName } = req.body;
     try {
-      const user = await User.create({ username, password });
+      const user = await User.create({ email, password, firstName, lastName });
       console.log(user._id);
       const accessToken = generateAccessToken(user._id);
       console.log(accessToken);
@@ -48,9 +48,9 @@ const authController = {
     }
   },
   async signin_post(req, res) {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     try {
-      const user = await User.signin(username, password);
+      const user = await User.signin(email, password);
       const accessToken = generateAccessToken(user._id);
 
       console.log(accessToken);
