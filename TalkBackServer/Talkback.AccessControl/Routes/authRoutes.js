@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { getUsers, authenticaateToken } from "../utils/authJwt.js";
+import { authenticaateToken } from "../utils/authJwt.js";
 import authController from "../Controllers/authController.js";
 
 const router = Router();
@@ -9,7 +9,7 @@ router.get("/protected", authenticaateToken, async (req, res) => {
   // const users = await getUsers(req, res);
   // console.log(users);
   // req.user; // users.filter((user) => user.username === req.user.name)
-  res.json({ message: "This is a protected resource" });
+  res.json({ user: req.user });
 });
 
 //signup + asign accessToken and refreshToken
