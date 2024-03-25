@@ -6,33 +6,73 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
+import { socket } from "../../utils/Socket";
+import { useState, useEffect } from "react";
+import { Button } from "@mui/material";
 
-export default function AlignItemsList() {
+export default function Contacts(props) {
+  const [onlineUsers, setOnlineUsers] = useState([]);
+
+  const [selectedUser, setSelecteUser] = useState(null);
+
+  const handleSelectedUser = (user) => {
+    setSelecteUser(user);
+    // eslint-disable-next-line react/prop-types
+    props.selectedUser(user);
+    console.log(user);
+  };
+
+  const handleUpdateUsers = (onlineusers) => {
+    if (onlineusers) {
+      setOnlineUsers(onlineusers.filter((user) => user !== socket.id));
+      console.log(onlineusers.filter((user) => user !== socket.id).length);
+    }
+  };
+
+  useEffect(() => {
+    socket.on("updateOnlineUsers", handleUpdateUsers);
+
+    return () => {
+      socket.off("updateOnlineUsers", handleUpdateUsers);
+      socket.disconnect();
+    };
+  }, []);
+
   return (
-    <List sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }}>
-      <ListItem alignItems="flex-start">
-        <ListItemAvatar>
-          <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
-        </ListItemAvatar>
-        <ListItemText
-          primary="Brunch this weekend?"
-          secondary={
-            <React.Fragment>
-              <Typography
-                sx={{ display: "inline" }}
-                component="span"
-                variant="body2"
-                color="text.primary"
-              >
-                Ali Connors
-              </Typography>
-              {" — I'll be in your neighborhood doing errands this…"}
-            </React.Fragment>
-          }
-        />
-      </ListItem>
-      <Divider variant="inset" component="li" />
-     
-    </List>
+    <>
+      <List sx={{ width: "100%", maxWidth: 360 }}>
+        {onlineUsers.length !== 0 ? (
+          onlineUsers.map((user) => (
+            // eslint-disable-next-line react/jsx-key
+            <Button onClick={() => handleSelectedUser(user)}>
+              <ListItem key={user} disableGutters>
+                <ListItemAvatar>
+                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={user}
+                  secondary={
+                    <React.Fragment>
+                      <Typography
+                        sx={{ display: "inline" }}
+                        component="span"
+                        variant="body2"
+                        color="text.primary"
+                      ></Typography>
+                      {"Tap here to start chat"}
+                      <Divider />
+                    </React.Fragment>
+                  }
+                />
+              </ListItem>
+            </Button>
+          ))
+        ) : (
+          <ListItem key={1} disableGutters>
+            <ListItemText primary={"No one is Online"} />
+          </ListItem>
+        )}
+      </List>
+    </>
   );
 }

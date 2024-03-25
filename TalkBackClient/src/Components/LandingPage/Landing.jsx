@@ -7,7 +7,8 @@ import { theme } from "../../assets/Themes/colors";
 import Grid from "@mui/material/Grid";
 import useMediaQuery from "@mui/material/useMediaQuery";
 
-export default function Landing() {
+
+const Landing = () => {
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -99,4 +100,5 @@ export default function Landing() {
       </ThemeProvider>
     </>
   );
-}
+};
+export default Landing;

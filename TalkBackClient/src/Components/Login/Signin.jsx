@@ -13,8 +13,21 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../assets/Themes/colors";
+import axios, { Axios, AxiosError } from "axios";
 
 function Copyright(props) {
+  // const onSubmit = async () => {
+  //   console.log("values: ", values);
+
+  //   try {
+  //     const response = await axios.post("http://localhost:3000/signup", values);
+  //   } catch (err) {
+  //     if (err) setError(err.response?.data.message);
+  //     else if (error) setError(err.message);
+  //     console.log("Error: ", err);
+  //   }
+  // };
+
   return (
     <Typography
       variant="body2"

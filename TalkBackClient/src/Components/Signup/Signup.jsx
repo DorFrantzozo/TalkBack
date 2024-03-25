@@ -13,8 +13,10 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../assets/Themes/colors";
+import { useState } from "react";
 
 function Copyright(props) {
+
   return (
     <Typography
       variant="body2"
@@ -33,7 +35,7 @@ function Copyright(props) {
 }
 
 export default function SignUp() {
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
@@ -41,6 +43,9 @@ export default function SignUp() {
       password: data.get("password"),
     });
   };
+
+ 
+
 
   return (
     <ThemeProvider theme={theme}>
@@ -122,7 +127,7 @@ export default function SignUp() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2 }}
+              sx={{ mt: 3, mb: 2, color:"white" }}
               color="primary"
             >
               Sign Up
