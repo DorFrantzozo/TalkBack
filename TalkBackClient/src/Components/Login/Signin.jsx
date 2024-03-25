@@ -46,13 +46,23 @@ function Copyright(props) {
 }
 
 export default function SignIn() {
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get("email"),
-      password: data.get("password"),
+   
+    const response = await fetch("http://localhost:3000/signin", {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: data.get("email"),
+        password: data.get("password"),
+      }),
     });
+    const tokens = await response.json();
+    console.log(tokens);
   };
 
   return (

@@ -30,9 +30,9 @@ const handleErrors = (error) => {
 
 const authController = {
   async signup_post(req, res) {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     try {
-      const user = await User.create({ username, password });
+      const user = await User.create({ email, password });
       console.log(user._id);
       const accessToken = generateAccessToken(user._id);
       console.log(accessToken);
@@ -47,9 +47,9 @@ const authController = {
     }
   },
   async signin_post(req, res) {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
     try {
-      const user = await User.signin(username, password);
+      const user = await User.signin(email, password);
       const accessToken = generateAccessToken(user._id);
       console.log(accessToken);
       const refreshToken = generateRefreshToken(user._id);

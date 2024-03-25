@@ -16,7 +16,6 @@ import { theme } from "../../assets/Themes/colors";
 import { useState } from "react";
 
 function Copyright(props) {
-
   return (
     <Typography
       variant="body2"
@@ -42,10 +41,42 @@ export default function SignUp() {
       email: data.get("email"),
       password: data.get("password"),
     });
+
+    try {
+      const response = await fetch("http://localhost:3000/signup", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: data.get("email"),
+          password: data.get("password"),
+          firstName: data.get("firstName"),
+          lastName: data.get("lastName"),
+        }),
+      });
+      if (response.ok) {
+        // Sign-up successful, update UI accordingly (e.g., redirect user)
+        console.log("Sign-up successful");
+        // Example: Redirect user to a different page
+        history.push("/dashboard");
+      } else {
+        // Sign-up failed, handle error
+        const errorData = await response.json();
+        console.error("Sign-up failed:", errorData.message);
+
+        // eslint-disable-next-line no-undef
+        setError(errorData.message); // Assuming setError is a state setter for error message
+      }
+    } catch (error) {
+      // Error occurred during fetch operation
+      console.error("Error during sign-up:", error);
+
+      // eslint-disable-next-line no-undef
+      setError("An unexpected error occurred. Please try again later.");
+    }
   };
-
- 
-
 
   return (
     <ThemeProvider theme={theme}>
@@ -127,7 +158,7 @@ export default function SignUp() {
               type="submit"
               fullWidth
               variant="contained"
-              sx={{ mt: 3, mb: 2, color:"white" }}
+              sx={{ mt: 3, mb: 2, color: "white" }}
               color="primary"
             >
               Sign Up

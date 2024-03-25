@@ -38,7 +38,7 @@ export default function Chat() {
             </Typography>
             <MyChat />
             <HisChat />
-            <Box sx={{ display: "flex", alignItems: "flex-end", mt: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "flex-end" }}>
               <TextField
                 sx={{ flex: 1, mr: 1 }}
                 id="standard-basic"
