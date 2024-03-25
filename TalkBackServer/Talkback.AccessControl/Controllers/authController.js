@@ -1,10 +1,7 @@
-import User from "../models/userModel.js";
+import User from "../Models/userModel.js";
+import Token from "../Models/refreshTokenModel.js";
 import jwt from "jsonwebtoken";
-import {
-  generateAccessToken,
-  generateRefreshToken,
-  refreshTokens,
-} from "../utils/authJwt.js";
+import { generateAccessToken, generateRefreshToken } from "../utils/authJwt.js";
 //handle errors
 const handleErrors = (error) => {
   console.log(error.message, error.code);
@@ -37,7 +34,11 @@ const authController = {
       const accessToken = generateAccessToken(user._id);
       console.log(accessToken);
       const refreshToken = generateRefreshToken(user._id);
-      refreshTokens.push(refreshToken);
+      const newRefreshToken = new Token({
+        token: refreshToken,
+        user: user._id,
+      });
+      await newRefreshToken.save();
       res
         .status(201)
         .json({ accessToken: accessToken, refreshToken: refreshToken });
@@ -51,9 +52,24 @@ const authController = {
     try {
       const user = await User.signin(email, password);
       const accessToken = generateAccessToken(user._id);
+
       console.log(accessToken);
       const refreshToken = generateRefreshToken(user._id);
-      refreshTokens.push(refreshToken);
+      const findTokenInDb = await Token.findOne({ user: user._id });
+      if (!findTokenInDb) {
+        const newRefreshToken = new Token({
+          token: refreshToken,
+          user: user._id,
+        });
+        await newRefreshToken.save();
+      } else {
+        let new_token = await Token.findOneAndUpdate(
+          { user: user._id },
+          { token: refreshToken },
+          { new: true }
+        );
+      }
+      // refreshTokens.push(refreshToken);
 
       res
         .status(200)
@@ -64,24 +80,39 @@ const authController = {
     }
   },
   async logout_delete(req, res) {
-    console.log(refreshTokens);
-    refreshTokens = refreshTokens.filter((token) => token !== req.body.token);
-    console.log("after");
-    console.log(refreshTokens);
-    res.sendStatus(204);
+    try {
+      await Token.findOneAndDelete({ token: req.body.token });
+    } catch (error) {
+      res.status(400).json("Token not found");
+    }
+    res.sendStatus(204).json("Success");
   },
   async token_get(req, res) {
     const refreshToken = req.body.token;
     if (refreshToken === null) return res.sendStatus(401);
-    if (!refreshTokens.includes(refreshToken)) return res.sendStatus(403);
-    jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, user) => {
-      if (err) {
-        console.log(err.message);
-        return res.sendStatus(403);
+    const findRefreshToken = await Token.findOne({ token: refreshToken });
+    if (!findRefreshToken)
+      return res.sendStatus(403).json("Token has been expired.Sign in again");
+    jwt.verify(
+      refreshToken,
+      process.env.REFRESH_TOKEN_SECRET,
+      async (err, user) => {
+        if (err) {
+          console.log(err.message);
+          return res.sendStatus(403);
+        }
+        const accessToken = generateAccessToken({ id: user._id });
+        const newRefreshToken = generateRefreshToken(user._id);
+        let new_token = await Token.findOneAndUpdate(
+          { token: refreshToken },
+          { token: newRefreshToken },
+          { new: true }
+        );
+        res
+          .status(200)
+          .json({ accessToken: accessToken, refreshToken: newRefreshToken });
       }
-      const accessToken = generateAccessToken({ id: user._id });
-      res.json({ accessToken: accessToken });
-    });
+    );
   },
 };
 export default authController;
