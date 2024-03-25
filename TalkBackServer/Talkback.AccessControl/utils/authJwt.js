@@ -2,7 +2,7 @@ import jwt from "jsonwebtoken";
 export const refreshTokens = [];
 export function generateAccessToken(id) {
   return jwt.sign({ id }, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: "15s",
+    expiresIn: "15m",
   });
 }
 export function generateRefreshToken(id) {

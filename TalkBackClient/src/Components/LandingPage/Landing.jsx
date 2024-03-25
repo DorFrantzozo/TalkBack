@@ -4,7 +4,7 @@ import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../assets/Themes/colors";
-
+import { Link } from "react-router-dom";
 
 const Landing = () => {
   return (
@@ -57,12 +57,11 @@ const Landing = () => {
                 bgcolor: "primary",
               }}
             >
-              <a href="/signin">
-                {" "}
+              <Link to="/signin">
                 <Button variant="contained" sx={{ color: "white" }}>
                   Chat an play now
                 </Button>
-              </a>
+              </Link>
             </Box>
           </Container>
         </Box>
