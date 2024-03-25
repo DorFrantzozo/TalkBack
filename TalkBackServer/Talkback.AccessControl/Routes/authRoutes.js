@@ -4,12 +4,12 @@ import authController from "../Controllers/authController.js";
 
 const router = Router();
 
-router.get("/users", authenticaateToken, async (req, res) => {
-  console.log(req.user);
-  const users = await getUsers(req, res);
-  console.log(users);
-  req.user;
-  res.json(users.filter((user) => user.username === req.user.name));
+router.get("/protected", authenticaateToken, async (req, res) => {
+  // console.log(req.user);
+  // const users = await getUsers(req, res);
+  // console.log(users);
+  // req.user; // users.filter((user) => user.username === req.user.name)
+  res.json({ message: "This is a protected resource" });
 });
 
 //signup + asign accessToken and refreshToken
