@@ -5,7 +5,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
+import MuiLink from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -13,7 +13,10 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../assets/Themes/colors";
-import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useState, useContext } from "react";
+import { postSignup } from "../../services/authService";
+import { AuthContext } from "../../context/authContext";
 
 function Copyright(props) {
   return (
@@ -34,6 +37,15 @@ function Copyright(props) {
 }
 
 export default function SignUp() {
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState({
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: "",
+  });
+
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -41,41 +53,19 @@ export default function SignUp() {
       email: data.get("email"),
       password: data.get("password"),
     });
-
-    try {
-      const response = await fetch("http://localhost:3000/signup", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          username: data.get("email"),
-          password: data.get("password"),
-          firstName: data.get("firstName"),
-          lastName: data.get("lastName"),
-        }),
-      });
-      if (response.ok) {
-        // Sign-up successful, update UI accordingly (e.g., redirect user)
-        console.log("Sign-up successful");
-        // Example: Redirect user to a different page
-        history.push("/dashboard");
-      } else {
-        // Sign-up failed, handle error
-        const errorData = await response.json();
-        console.error("Sign-up failed:", errorData.message);
-
-        // eslint-disable-next-line no-undef
-        setError(errorData.message); // Assuming setError is a state setter for error message
-      }
-    } catch (error) {
-      // Error occurred during fetch operation
-      console.error("Error during sign-up:", error);
-
-      // eslint-disable-next-line no-undef
-      setError("An unexpected error occurred. Please try again later.");
+    const errors = await postSignup(
+      data.get("email"),
+      data.get("password"),
+      data.get("firstName"),
+      data.get("lastName")
+    );
+    console.log(errors);
+    if (errors) {
+      setErrorMessage(errors);
+      return;
     }
+    auth.login();
+    navigate("/");
   };
 
   return (
@@ -105,6 +95,7 @@ export default function SignUp() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  error={errorMessage.firstName}
                   autoComplete="given-name"
                   name="firstName"
                   required
@@ -112,30 +103,36 @@ export default function SignUp() {
                   id="firstName"
                   label="First Name"
                   autoFocus
+                  helperText={errorMessage.firstName}
                 />
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
+                  error={errorMessage.lastName}
                   required
                   fullWidth
                   id="lastName"
                   label="Last Name"
                   name="lastName"
                   autoComplete="family-name"
+                  helperText={errorMessage.lastName}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  error={errorMessage.email}
                   required
                   fullWidth
                   id="email"
                   label="Email Address"
                   name="email"
                   autoComplete="email"
+                  helperText={errorMessage.email}
                 />
               </Grid>
               <Grid item xs={12}>
                 <TextField
+                  error={errorMessage.password}
                   required
                   fullWidth
                   name="password"
@@ -143,6 +140,7 @@ export default function SignUp() {
                   type="password"
                   id="password"
                   autoComplete="new-password"
+                  helperText={errorMessage.password}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -165,9 +163,9 @@ export default function SignUp() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="#" variant="body2">
+                <MuiLink component={Link} to="/signin" variant="body2">
                   Already have an account? Sign in
-                </Link>
+                </MuiLink>
               </Grid>
             </Grid>
           </Box>

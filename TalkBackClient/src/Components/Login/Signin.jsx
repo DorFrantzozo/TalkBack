@@ -5,7 +5,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
+import MuiLink from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -13,7 +13,11 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../assets/Themes/colors";
-import axios, { Axios, AxiosError } from "axios";
+import { useContext } from "react";
+// import axios, { Axios, AxiosError } from "axios";
+import { postSignin } from "../../services/authService";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../../context/authContext";
 
 function Copyright(props) {
   // const onSubmit = async () => {
@@ -46,23 +50,14 @@ function Copyright(props) {
 }
 
 export default function SignIn() {
+  const auth = useContext(AuthContext);
+  const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-   
-    const response = await fetch("http://localhost:3000/signin", {
-      method: "POST",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        username: data.get("email"),
-        password: data.get("password"),
-      }),
-    });
-    const tokens = await response.json();
-    console.log(tokens);
+    postSignin(data.get("email"), data.get("password"));
+    await auth.login();
+    navigate("/");
   };
 
   return (
@@ -123,14 +118,14 @@ export default function SignIn() {
             </Button>
             <Grid container>
               <Grid item xs>
-                <Link href="#" variant="body2">
+                <MuiLink component={Link} to={"/resetpass"} variant="body2">
                   Forgot password?
-                </Link>
+                </MuiLink>
               </Grid>
               <Grid item>
-                <Link href="#" variant="body2">
+                <MuiLink component={Link} to={"/signup"} variant="body2">
                   {"Don't have an account? Sign Up"}
-                </Link>
+                </MuiLink>
               </Grid>
             </Grid>
           </Box>

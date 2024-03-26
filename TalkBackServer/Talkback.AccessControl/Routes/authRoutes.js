@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { authenticaateToken } from "../utils/authJwt.js";
+import { authenticaateAccessToken } from "../utils/authJwt.js";
 import authController from "../Controllers/authController.js";
 
 const router = Router();
 
-router.get("/protected", authenticaateToken, async (req, res) => {
+router.get("/user", authenticaateAccessToken, async (req, res) => {
   // console.log(req.user);
   // const users = await getUsers(req, res);
   // console.log(users);
@@ -22,6 +22,6 @@ router.post("/signin", authController.signin_post);
 router.delete("/logout", authController.logout_delete);
 
 // get new accessToken
-router.get("/token", authController.token_get);
+router.put("/token", authController.token_put);
 
 export default router;

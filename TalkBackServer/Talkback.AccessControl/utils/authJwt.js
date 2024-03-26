@@ -10,8 +10,8 @@ export function generateRefreshToken(id) {
     expiresIn: "7d",
   });
 }
-export function authenticaateToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
+export function authenticaateAccessToken(req, res, next) {
+  const authHeader = req.headers["Authorization"];
   const token = authHeader && authHeader.split(" ")[1];
   console.log(token);
   if (token == null) return res.sentStatus(401);

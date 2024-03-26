@@ -12,20 +12,20 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import myLogo from "../../assets/Images/Logo.png";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { theme } from "../../assets/Themes/colors";
 import { ThemeProvider } from "@emotion/react";
 // import { Link as MuiLink } from "@mui/material";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../context/authContext";
 
 const pages = ["Game", "Chat", "About"];
 const settings = ["Profile", "Account", "Dashboard", "Logout"];
 
 function ResponsiveAppBar() {
-  const [anchorElNav, setAnchorElNav] = React.useState(null);
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-  const [isLogedin, setIsLogedIn] = useState(false);
-  console.log(isLogedin);
+  const [anchorElNav, setAnchorElNav] = useState(null);
+  const [anchorElUser, setAnchorElUser] = useState(null);
+  const auth = useContext(AuthContext);
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
@@ -40,9 +40,9 @@ function ResponsiveAppBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  const handelLogIn = () => {
-    setIsLogedIn(!isLogedin);
+  const handleLogout = () => {
+    setAnchorElUser(null);
+    auth.logout();
   };
 
   return (
@@ -139,7 +139,7 @@ function ResponsiveAppBar() {
               ))}
             </Box>
 
-            {isLogedin ? (
+            {auth.isLoggedin ? (
               <Box id="profile-button" sx={{ flexGrow: 0 }}>
                 <Tooltip title="Open settings">
                   <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -170,10 +170,7 @@ function ResponsiveAppBar() {
                       key={setting}
                       onClick={
                         setting === "Logout"
-                          ? () => {
-                              setAnchorElUser(null);
-                              handelLogIn();
-                            }
+                          ? handleLogout
                           : handleCloseUserMenu
                       }
                     >
@@ -192,7 +189,6 @@ function ResponsiveAppBar() {
                       color: "#EFEEEE",
                       borderColor: "#EFEEEE",
                     }}
-                    onClick={handelLogIn}
                   >
                     Login
                   </Button>

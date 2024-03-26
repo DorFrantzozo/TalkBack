@@ -1,5 +1,4 @@
 import User from "../Models/userModel.js";
-import Token from "../Models/refreshTokenModel.js";
 import jwt from "jsonwebtoken";
 import { generateAccessToken, generateRefreshToken } from "../utils/authJwt.js";
 //handle errors
@@ -32,13 +31,8 @@ const authController = {
       const user = await User.create({ email, password, firstName, lastName });
       console.log(user._id);
       const accessToken = generateAccessToken(user._id);
-      console.log(accessToken);
       const refreshToken = generateRefreshToken(user._id);
-      const newRefreshToken = new Token({
-        token: refreshToken,
-        user: user._id,
-      });
-      await newRefreshToken.save();
+
       res
         .status(201)
         .json({ accessToken: accessToken, refreshToken: refreshToken });
@@ -52,25 +46,7 @@ const authController = {
     try {
       const user = await User.signin(email, password);
       const accessToken = generateAccessToken(user._id);
-
-      console.log(accessToken);
       const refreshToken = generateRefreshToken(user._id);
-      const findTokenInDb = await Token.findOne({ user: user._id });
-      if (!findTokenInDb) {
-        const newRefreshToken = new Token({
-          token: refreshToken,
-          user: user._id,
-        });
-        await newRefreshToken.save();
-      } else {
-        let new_token = await Token.findOneAndUpdate(
-          { user: user._id },
-          { token: refreshToken },
-          { new: true }
-        );
-      }
-      // refreshTokens.push(refreshToken);
-
       res
         .status(200)
         .json({ accessToken: accessToken, refreshToken: refreshToken });
@@ -81,33 +57,25 @@ const authController = {
   },
   async logout_delete(req, res) {
     try {
-      await Token.findOneAndDelete({ token: req.body.token });
+      res.status(200);
     } catch (error) {
       res.status(400).json("Token not found");
     }
-    res.sendStatus(204).json("Success");
   },
-  async token_get(req, res) {
+  async token_put(req, res) {
     const refreshToken = req.body.token;
     if (refreshToken === null) return res.sendStatus(401);
-    const findRefreshToken = await Token.findOne({ token: refreshToken });
-    if (!findRefreshToken)
-      return res.sendStatus(403).json("Token has been expired.Sign in again");
     jwt.verify(
       refreshToken,
       process.env.REFRESH_TOKEN_SECRET,
       async (err, user) => {
         if (err) {
+          console.log("not verefied");
           console.log(err.message);
           return res.sendStatus(403);
         }
         const accessToken = generateAccessToken({ id: user._id });
         const newRefreshToken = generateRefreshToken(user._id);
-        let new_token = await Token.findOneAndUpdate(
-          { token: refreshToken },
-          { token: newRefreshToken },
-          { new: true }
-        );
         res
           .status(200)
           .json({ accessToken: accessToken, refreshToken: newRefreshToken });
