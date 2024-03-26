@@ -13,7 +13,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../assets/Themes/colors";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 // import axios, { Axios, AxiosError } from "axios";
 import { postSignin } from "../../services/authService";
 import { Link, useNavigate } from "react-router-dom";
@@ -52,10 +52,18 @@ function Copyright(props) {
 export default function SignIn() {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState({
+    email: "",
+    password: "",
+  });
   const handleSubmit = async (event) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
-    postSignin(data.get("email"), data.get("password"));
+    const errors = await postSignin(data.get("email"), data.get("password"));
+    if (errors) {
+      setErrorMessage(errors);
+      return;
+    }
     await auth.login();
     navigate("/");
   };
@@ -85,6 +93,7 @@ export default function SignIn() {
             sx={{ mt: 1 }}
           >
             <TextField
+              error={errorMessage.email}
               margin="normal"
               required
               fullWidth
@@ -93,8 +102,10 @@ export default function SignIn() {
               name="email"
               autoComplete="email"
               autoFocus
+              helperText={errorMessage.email}
             />
             <TextField
+              error={errorMessage.password}
               margin="normal"
               required
               fullWidth
@@ -103,6 +114,7 @@ export default function SignIn() {
               type="password"
               id="password"
               autoComplete="current-password"
+              helperText={errorMessage.password}
             />
             <FormControlLabel
               control={<Checkbox value="remember" color="primary" />}

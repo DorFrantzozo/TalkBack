@@ -59,7 +59,6 @@ export default function SignUp() {
       data.get("firstName"),
       data.get("lastName")
     );
-    console.log(errors);
     if (errors) {
       setErrorMessage(errors);
       return;

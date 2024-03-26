@@ -6,8 +6,6 @@ const service = axios.create({
 
 const refreshTokenValidation = async (token) => {
   try {
-    console.log({ token, timestamp: new Date().getTime() });
-
     const response = await service.put("/token", { token });
     if (response.status === 200) {
       const { accessToken, refreshToken } = response.data;
@@ -68,9 +66,13 @@ export const postSignin = async (email, password) => {
       }
     );
     const { accessToken, refreshToken } = response.data;
-    console.log(accessToken, refreshToken);
     await assignTokens(accessToken, refreshToken);
   } catch (error) {
+    if (error.response.status === 400) {
+      let { errors } = error.response.data;
+      return errors;
+    }
+
     console.error("Error signning in ", error);
     throw error;
   }
@@ -90,10 +92,8 @@ export const postSignup = async (email, password, firstName, lastName) => {
     );
 
     const { accessToken, refreshToken } = response.data;
-    console.log(accessToken, refreshToken);
     await assignTokens(accessToken, refreshToken);
   } catch (error) {
-    console.log(error.response);
     if (error.response.status === 400) {
       let { errors } = error.response.data;
       return errors;
@@ -108,7 +108,7 @@ export const postSignup = async (email, password, firstName, lastName) => {
 export const deleteLogout = async (token) => {
   try {
     const response = await service.delete("/logout", { token });
-    console.log(response);
+
     if (response.status === 200) {
       await deassignTokens();
       console.log("logged out successfully");

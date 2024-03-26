@@ -57,7 +57,8 @@ const authController = {
   },
   async logout_delete(req, res) {
     try {
-      res.status(200);
+      res.status(200).json("hy");
+      console.log("a");
     } catch (error) {
       res.status(400).json("Token not found");
     }
