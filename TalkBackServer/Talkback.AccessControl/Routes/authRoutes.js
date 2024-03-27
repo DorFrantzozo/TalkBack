@@ -4,13 +4,7 @@ import authController from "../Controllers/authController.js";
 
 const router = Router();
 
-router.get("/user", authenticaateAccessToken, async (req, res) => {
-  // console.log(req.user);
-  // const users = await getUsers(req, res);
-  // console.log(users);
-  // req.user; // users.filter((user) => user.username === req.user.name)
-  res.json({ user: req.user });
-});
+router.get("/user", authenticaateAccessToken, authController.user_get);
 
 //signup + asign accessToken and refreshToken
 router.post("/signup", authController.signup_post);

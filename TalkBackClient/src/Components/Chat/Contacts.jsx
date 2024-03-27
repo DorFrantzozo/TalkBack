@@ -23,9 +23,14 @@ export default function Contacts(props) {
   };
 
   const handleUpdateUsers = (onlineusers) => {
+    console.log(onlineusers);
+
     if (onlineusers) {
-      setOnlineUsers(onlineusers.filter((user) => user !== socket.id));
-      console.log(onlineusers.filter((user) => user !== socket.id).length);
+      const filteredIds = Object.keys(onlineusers).filter(
+        (id) => socket.id !== id
+      );
+      const filteredUsers = filteredIds.map((id) => onlineusers[id].name);
+      setOnlineUsers(filteredUsers);
     }
   };
 
@@ -34,7 +39,6 @@ export default function Contacts(props) {
 
     return () => {
       socket.off("updateOnlineUsers", handleUpdateUsers);
-      socket.disconnect();
     };
   }, []);
 

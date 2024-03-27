@@ -8,28 +8,43 @@ import {
 import {
   loginTokenValidation,
   logoutTokenValidation,
+  getUser,
 } from "../services/authService";
+import { SocketManager, socket } from "../utils/Socket";
 
 export const AuthContext = createContext({
+  name: null,
   isLoggedin: false,
   login: () => {},
   logout: () => {},
 });
 export const AuthProvider = () => {
   const [isLoggedin, setIsLogIn] = useState(false);
+  const [name, setName] = useState(null);
+
   useMemo(async () => {
     if (await loginTokenValidation()) {
       setIsLogIn(true);
+      const user = await getUser();
+      console.log(user);
+      SocketManager.connect();
+      setName(user.name);
     }
   }, []);
-  const login = useCallback(() => {
-    if (loginTokenValidation()) {
+  const login = useCallback(async () => {
+    if (await loginTokenValidation()) {
       setIsLogIn(true);
+      const user = await getUser();
+      console.log(user);
+      SocketManager.connect();
+      setName(user.name);
     }
   }, []);
   const logout = useCallback(() => {
     if (logoutTokenValidation()) {
       setIsLogIn(false);
+      SocketManager.disconnect();
+      setName(null);
     }
   }, []);
 
@@ -44,5 +59,5 @@ export const AuthProvider = () => {
     };
   }, []);
 
-  return { isLoggedin, login, logout };
+  return { isLoggedin, login, logout, name };
 };

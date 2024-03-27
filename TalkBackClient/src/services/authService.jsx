@@ -125,3 +125,12 @@ export const deleteLogout = async (token) => {
     throw error;
   }
 };
+export const getUser = async () => {
+  try {
+    const response = await service.get("/user");
+    return response.data;
+  } catch (error) {
+    console.error("Error getting user", error);
+    throw error;
+  }
+};

@@ -40,10 +40,10 @@ export default function SignUp() {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState({
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
+    email: null,
+    password: null,
+    firstName: null,
+    lastName: null,
   });
 
   const handleSubmit = async (event) => {
@@ -94,7 +94,7 @@ export default function SignUp() {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  error={errorMessage.firstName}
+                  error={errorMessage.firstName ? true : false}
                   autoComplete="given-name"
                   name="firstName"
                   required
@@ -107,7 +107,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <TextField
-                  error={errorMessage.lastName}
+                  error={errorMessage.lastName ? true : false}
                   required
                   fullWidth
                   id="lastName"
@@ -119,7 +119,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  error={errorMessage.email}
+                  error={errorMessage.email ? true : false}
                   required
                   fullWidth
                   id="email"
@@ -131,7 +131,7 @@ export default function SignUp() {
               </Grid>
               <Grid item xs={12}>
                 <TextField
-                  error={errorMessage.password}
+                  error={errorMessage.password ? true : false}
                   required
                   fullWidth
                   name="password"

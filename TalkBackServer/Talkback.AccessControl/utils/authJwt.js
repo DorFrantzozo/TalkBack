@@ -11,23 +11,13 @@ export function generateRefreshToken(id) {
   });
 }
 export function authenticaateAccessToken(req, res, next) {
-  const authHeader = req.headers["Authorization"];
+  const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  console.log(token);
-  if (token == null) return res.sentStatus(401);
+  if (!token) return res.status(401).json({ message: "Token is missing" });
 
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) return res.sentStatus(403);
-    req.user = user;
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, decoded) => {
+    if (err) return res.status(403).json({ message: "Invalid access token" });
+    req.user = decoded.id;
     next();
   });
 }
-
-// export const getUsers = async (req, res) => {
-//   try {
-//     const users = await User.find();
-//     res.status(200).send(users);
-//   } catch (error) {
-//     res.status(404).send({ message: error.message });
-//   }
-// };

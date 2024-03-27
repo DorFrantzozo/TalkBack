@@ -53,8 +53,8 @@ export default function SignIn() {
   const auth = useContext(AuthContext);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState({
-    email: "",
-    password: "",
+    email: null,
+    password: null,
   });
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -93,7 +93,7 @@ export default function SignIn() {
             sx={{ mt: 1 }}
           >
             <TextField
-              error={errorMessage.email}
+              error={errorMessage.email ? true : false}
               margin="normal"
               required
               fullWidth
@@ -105,7 +105,7 @@ export default function SignIn() {
               helperText={errorMessage.email}
             />
             <TextField
-              error={errorMessage.password}
+              error={errorMessage.password ? true : false}
               margin="normal"
               required
               fullWidth

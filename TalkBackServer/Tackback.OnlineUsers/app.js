@@ -15,19 +15,31 @@ const io = new Server(httpServer, {
 });
 
 const OnlineUsers = {};
-io.on("connection", (socket) => {
-  console.log("A user connected:", socket.id);
-  OnlineUsers[socket.id] = socket.id;
-  socket.emit("updateOnlineUsers", Object.values(OnlineUsers));
-  socket.broadcast.emit("updateOnlineUsers", Object.values(OnlineUsers));
+const userVerification = (id) => {
+  return Object.values(OnlineUsers).some((user) => {
+    if (user.id === id) {
+      return true;
+    }
+    return false;
+  });
+};
 
-  socket.on("UpdateUsers", () => {
-    // OnlineUsers[socket.id] = name;
-    socket.broadcast.emit("user-connected", OnlineUsers[socket.id]);
+io.on("connection", (socket) => {
+  socket.on("addUser", ({ name, id }) => {
+    if (userVerification(id)) {
+      return socket.disconnect();
+    }
+    console.log("A user connected:", name);
+    OnlineUsers[socket.id] = { name: name, id: id };
+    socket.emit("updateOnlineUsers", OnlineUsers);
+    socket.broadcast.emit("updateOnlineUsers", OnlineUsers);
   });
   socket.on("disconnect", () => {
-    console.log("A user disconnected:", socket.id);
-    delete OnlineUsers[socket.id];
-    socket.broadcast.emit("updateOnlineUsers", Object.values(OnlineUsers));
+    if (OnlineUsers[socket.id]) {
+      console.log("A user disconnected:", OnlineUsers[socket.id].name);
+      socket.broadcast.emit("removeUser");
+      delete OnlineUsers[socket.id];
+      socket.broadcast.emit("updateOnlineUsers", OnlineUsers);
+    }
   });
 });

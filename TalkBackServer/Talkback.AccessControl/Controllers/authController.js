@@ -29,7 +29,7 @@ const authController = {
     const { email, password, firstName, lastName } = req.body;
     try {
       const user = await User.create({ email, password, firstName, lastName });
-      console.log(user._id);
+
       const accessToken = generateAccessToken(user._id);
       const refreshToken = generateRefreshToken(user._id);
 
@@ -47,9 +47,10 @@ const authController = {
       const user = await User.signin(email, password);
       const accessToken = generateAccessToken(user._id);
       const refreshToken = generateRefreshToken(user._id);
-      res
-        .status(200)
-        .json({ accessToken: accessToken, refreshToken: refreshToken });
+      res.status(200).json({
+        accessToken: accessToken,
+        refreshToken: refreshToken,
+      });
     } catch (error) {
       const errors = handleErrors(error);
       res.status(400).json({ errors });
@@ -58,7 +59,6 @@ const authController = {
   async logout_delete(req, res) {
     try {
       res.status(200).json("hy");
-      console.log("a");
     } catch (error) {
       res.status(400).json("Token not found");
     }
@@ -75,13 +75,20 @@ const authController = {
           console.log(err.message);
           return res.sendStatus(403);
         }
-        const accessToken = generateAccessToken({ id: user._id });
-        const newRefreshToken = generateRefreshToken(user._id);
+        const accessToken = generateAccessToken(user.id);
+        const newRefreshToken = generateRefreshToken(user.id);
         res
           .status(200)
           .json({ accessToken: accessToken, refreshToken: newRefreshToken });
       }
     );
+  },
+  async user_get(req, res) {
+    const user = await User.findById(req.user);
+    // const user = { firstName: "alon", lastName: "ben" };
+    res
+      .status(200)
+      .json({ name: `${user.firstName} ${user.lastName}`, id: req.user });
   },
 };
 export default authController;
