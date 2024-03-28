@@ -28,9 +28,10 @@ export default function Chat() {
   const handlesendMessage = () => {
     if (messageInput.trim() !== "") {
       // Emit 'sendMessage' event to the server
+
       setMessages((perv) => [
         ...perv,
-        { isSelf: true, messageInput, name: auth.name },
+        { isSelf: true, message: messageInput, name: auth.name },
       ]);
       userSocket.emit("sendMessage", messageInput, selectedUser);
       console.log(messageInput);
@@ -70,16 +71,19 @@ export default function Chat() {
               >
                 {selectedUser ? selectedUser.name : ""}
               </Typography>
-              {Object.values(messages).map((data, index) => {
-                <>
-                  {data.isSelf ? (
-                    <MyChat key={index} data={JSON.stringify(data)} />
+              <Box>
+                {Object.values(messages).map((data, index) =>
+                  data.isSelf ? (
+                    <MyChat
+                     
+                      key={index}
+                      data={JSON.stringify(data)}
+                    />
                   ) : (
                     <HisChat key={index} data={JSON.stringify(data)} />
-                  )}
-                </>;
-              })}
-
+                  )
+                )}
+              </Box>
               <Box sx={{ display: "flex", alignItems: "flex-end" }}>
                 <TextField
                   sx={{ flex: 1, mr: 1 }}

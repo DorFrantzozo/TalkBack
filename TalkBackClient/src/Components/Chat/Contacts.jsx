@@ -1,7 +1,7 @@
 import * as React from "react";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import Divider from "@mui/material/Divider";
+import { OnlineBadge } from "../../assets/Themes/colors";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
@@ -53,7 +53,16 @@ export default function Contacts({ handleSelected }) {
             <Button key={index} onClick={() => handleSelectedUser(user)}>
               <ListItem key={index} disableGutters>
                 <ListItemAvatar>
-                  <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
+                  <OnlineBadge
+                    overlap="circular"
+                    anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                    variant="dot"
+                  >
+                    <Avatar
+                      alt="Remy Sharp"
+                      src="/static/images/avatar/1.jpg"
+                    />
+                  </OnlineBadge>
                 </ListItemAvatar>
                 <ListItemText
                   primary={user.name}
