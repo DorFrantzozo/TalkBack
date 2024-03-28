@@ -10,6 +10,7 @@ import { userSocket } from "../../services/userSocketService";
 import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 
+// eslint-disable-next-line react/prop-types
 export default function Contacts({ handleSelected }) {
   const [onlineUsers, setOnlineUsers] = useState([]);
 
@@ -63,13 +64,14 @@ export default function Contacts({ handleSelected }) {
                         component="span"
                         variant="body2"
                         color="text.primary"
-                      ></Typography>
-                      {"Tap here to start chat"}
-                      <Divider />
+                      >
+                        {"Tap here to start chat"}
+                      </Typography>
                     </React.Fragment>
                   }
                 />
               </ListItem>
+              <Divider />
             </Button>
           ))
         ) : (

@@ -18,11 +18,13 @@ export default function Chat() {
   useEffect(() => {
     // Listen for 'receiveMessage' event from the server
     userSocket.on("receiveMessage", (message) => {
-      setMessages([...messages, message]);
+      setMessages((perv) => [...perv, message]);
     });
 
     // Clean up socket connection on component unmount
-    return () => userSocket.off("receiveMessage");
+    return () => {
+      userSocket.off("receiveMessage");
+    };
   }, []);
 
   const sendMessage = () => {
@@ -35,53 +37,56 @@ export default function Chat() {
   };
 
   const handleSelected = (selectedUser) => {
-    setSelectedUser(selectedUser);
-    console.log(selectedUser);
+    const user = JSON.parse(selectedUser);
+    setSelectedUser(user);
+    console.log(user);
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ flexGrow: 1, marginTop: "40px" }}>
-        <Grid container spacing={2}>
-          <Grid item xs={12} md={3}>
-            <Typography
-              variant="h4"
-              sx={{ display: "flex", justifyContent: "center", mb: "20px" }}
-            >
-              Contacts
-            </Typography>
-            <Contacts handleSelected={handleSelected} />
-          </Grid>
-          <Grid item xs={12} md={9}>
-            <Typography
-              variant="h4"
-              sx={{ display: "flex", justifyContent: "center", mb: "20px" }}
-            >
-              {selectedUser}
-            </Typography>
-            <MyChat />
-            <HisChat />
-            <Box sx={{ display: "flex", alignItems: "flex-end" }}>
-              <TextField
-                sx={{ flex: 1, mr: 1 }}
-                id="standard-basic "
-                label="Type your message here"
-                variant="standard"
-                onChange={(e) => setMessageInput(e.target.value)}
-              />
-              <Button
-                variant="contained"
-                size="small"
-                endIcon={<SendIcon />}
-                onClick={sendMessage}
-                sx={{ height: "40px", color: "white" }}
+    <>
+      <ThemeProvider theme={theme}>
+        <Box sx={{ flexGrow: 1, marginTop: "40px" }}>
+          <Grid container spacing={2}>
+            <Grid item xs={12} md={3}>
+              <Typography
+                variant="h4"
+                sx={{ display: "flex", justifyContent: "center", mb: "20px" }}
               >
-                Send
-              </Button>
-            </Box>
+                Contacts
+              </Typography>
+              <Contacts handleSelected={handleSelected} />
+            </Grid>
+            <Grid item xs={12} md={9}>
+              <Typography
+                variant="h4"
+                sx={{ display: "flex", justifyContent: "center", mb: "20px" }}
+              >
+                {selectedUser ? selectedUser.name : ""}
+              </Typography>
+              <MyChat />
+              <HisChat />
+              <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+                <TextField
+                  sx={{ flex: 1, mr: 1 }}
+                  id="standard-basic "
+                  label="Type your message here"
+                  variant="standard"
+                  onChange={(e) => setMessageInput(e.target.value)}
+                />
+                <Button
+                  variant="contained"
+                  size="small"
+                  endIcon={<SendIcon />}
+                  onClick={sendMessage}
+                  sx={{ height: "40px", color: "white" }}
+                >
+                  Send
+                </Button>
+              </Box>
+            </Grid>
           </Grid>
-        </Grid>
-      </Box>
-    </ThemeProvider>
+        </Box>
+      </ThemeProvider>
+    </>
   );
 }
