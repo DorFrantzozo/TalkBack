@@ -35,6 +35,7 @@ export default function Chat() {
       userSocket.emit("sendMessage", messageInput, selectedUser);
       console.log(messageInput);
       setMessageInput("");
+      // Your submit logic here
     }
   };
   const handleReceiveMessage = (message, name) => {
@@ -85,6 +86,7 @@ export default function Chat() {
                   id="standard-basic "
                   label="Type your message here"
                   variant="standard"
+                  value={messageInput}
                   onChange={(e) => setMessageInput(e.target.value)}
                 />
                 <Button
