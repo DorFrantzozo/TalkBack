@@ -10,14 +10,11 @@ import { userSocket } from "../../services/userSocketService";
 import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 
-export default function Contacts(props) {
+export default function Contacts({ handleSelected }) {
   const [onlineUsers, setOnlineUsers] = useState([]);
 
-  const [selectedUser, setSelecteUser] = useState(null);
-
   const handleSelectedUser = (user) => {
-    setSelecteUser(user);
-    props.selectedUser(user);
+    handleSelected(JSON.stringify(user));
     console.log(user);
   };
 
@@ -28,7 +25,13 @@ export default function Contacts(props) {
       const filteredIds = Object.keys(onlineusers).filter(
         (id) => userSocket.id !== id
       );
-      const filteredUsers = filteredIds.map((id) => onlineusers[id].name);
+      const filteredUsers = {};
+      filteredIds.map((id, index) => {
+        filteredUsers[index] = { id, name: onlineusers[id].name };
+
+        console.log(index, filteredUsers[index]);
+      });
+      console.log(filteredUsers);
       setOnlineUsers(filteredUsers);
     }
   };
@@ -45,15 +48,14 @@ export default function Contacts(props) {
     <>
       <List sx={{ width: "100%", maxWidth: 360 }}>
         {onlineUsers.length !== 0 ? (
-          onlineUsers.map((user, index) => (
-            // eslint-disable-next-line react/jsx-key
-            <Button onClick={() => handleSelectedUser(user)}>
+          Object.values(onlineUsers).map((user, index) => (
+            <Button key={index} onClick={() => handleSelectedUser(user)}>
               <ListItem key={index} disableGutters>
                 <ListItemAvatar>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={user}
+                  primary={user.name}
                   secondary={
                     <React.Fragment>
                       <Typography

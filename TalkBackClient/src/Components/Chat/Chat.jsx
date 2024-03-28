@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 import chatHandler from "../../../../TalkBackServer/Tackback.OnlineUsers/sockets/user/chatHandler";
 import { userSocket } from "../../services/userSocketService";
 export default function Chat() {
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState({});
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState([]);
 
@@ -34,8 +34,9 @@ export default function Chat() {
     }
   };
 
-  const handleSelecteUser = (selectedUser) => {
+  const handleSelected = (selectedUser) => {
     setSelectedUser(selectedUser);
+    console.log(selectedUser);
   };
 
   return (
@@ -49,7 +50,7 @@ export default function Chat() {
             >
               Contacts
             </Typography>
-            <Contacts selectedUser={handleSelecteUser} />
+            <Contacts handleSelected={handleSelected} />
           </Grid>
           <Grid item xs={12} md={9}>
             <Typography

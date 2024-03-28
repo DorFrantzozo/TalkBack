@@ -27,6 +27,8 @@ export default function chatHandler(socket) {
       socket.broadcast.emit("updateOnlineUsers", OnlineUsers);
     }
   };
+
+  const selectUserToChat = (user) => {};
   socket.on("user:connect", connectUser);
   socket.on("disconnect", disconnectUser);
 }
