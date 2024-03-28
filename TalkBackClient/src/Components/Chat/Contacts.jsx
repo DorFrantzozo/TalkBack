@@ -71,7 +71,6 @@ export default function Contacts({ handleSelected }) {
                   }
                 />
               </ListItem>
-              <Divider />
             </Button>
           ))
         ) : (

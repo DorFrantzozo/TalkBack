@@ -8,7 +8,6 @@ import SendIcon from "@mui/icons-material/Send";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../assets/Themes/colors";
 import { useState, useEffect } from "react";
-import chatHandler from "../../../../TalkBackServer/Tackback.OnlineUsers/sockets/user/chatHandler";
 import { userSocket } from "../../services/userSocketService";
 export default function Chat() {
   const [selectedUser, setSelectedUser] = useState({});
