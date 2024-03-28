@@ -1,12 +1,12 @@
+import { getUserName } from "./userHandler.js";
 export default function chatHandler(socket) {
-  const sendMessage = (message) => {
+  const sendMessage = (message, user) => {
     // When the client sends a message
     console.log("Message received:", message);
     // Broadcast the message to all connected clients
-    socket.emit("receiveMessage", message);
+    console.log(user);
+    const sender = getUserName(socket.id);
+    socket.to(user.id).emit("receiveMessage", message, sender.name);
   };
   socket.on("sendMessage", sendMessage);
-  const readOrder = (orderId, callback) => {
-    // ...
-  };
 }

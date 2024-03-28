@@ -7,6 +7,10 @@ const userVerification = (id) => {
   });
 };
 const OnlineUsers = {};
+export const getUserName = (id) => {
+  if (OnlineUsers[id]) return OnlineUsers[id];
+  return null;
+};
 export default function chatHandler(socket) {
   const connectUser = (payload) => {
     const { name, id } = payload;
