@@ -17,7 +17,6 @@ export default function Contacts(props) {
 
   const handleSelectedUser = (user) => {
     setSelecteUser(user);
-    // eslint-disable-next-line react/prop-types
     props.selectedUser(user);
     console.log(user);
   };

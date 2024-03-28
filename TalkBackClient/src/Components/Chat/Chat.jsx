@@ -7,10 +7,32 @@ import Grid from "@mui/material/Grid";
 import SendIcon from "@mui/icons-material/Send";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../assets/Themes/colors";
-import { useState } from "react";
-
+import { useState, useEffect } from "react";
+import chatHandler from "../../../../TalkBackServer/Tackback.OnlineUsers/sockets/user/chatHandler";
+import { userSocket } from "../../services/userSocketService";
 export default function Chat() {
   const [selectedUser, setSelectedUser] = useState(null);
+  const [messageInput, setMessageInput] = useState("");
+  const [messages, setMessages] = useState([]);
+
+  useEffect(() => {
+    // Listen for 'receiveMessage' event from the server
+    userSocket.on("receiveMessage", (message) => {
+      setMessages([...messages, message]);
+    });
+
+    // Clean up socket connection on component unmount
+    return () => userSocket.off("receiveMessage");
+  }, []);
+
+  const sendMessage = () => {
+    if (messageInput.trim() !== "") {
+      // Emit 'sendMessage' event to the server
+      userSocket.emit("sendMessage", messageInput);
+      console.log(messageInput);
+      setMessageInput("");
+    }
+  };
 
   const handleSelecteUser = (selectedUser) => {
     setSelectedUser(selectedUser);
@@ -41,14 +63,16 @@ export default function Chat() {
             <Box sx={{ display: "flex", alignItems: "flex-end" }}>
               <TextField
                 sx={{ flex: 1, mr: 1 }}
-                id="standard-basic"
+                id="standard-basic "
                 label="Type your message here"
                 variant="standard"
+                onChange={(e) => setMessageInput(e.target.value)}
               />
               <Button
                 variant="contained"
                 size="small"
                 endIcon={<SendIcon />}
+                onClick={sendMessage}
                 sx={{ height: "40px", color: "white" }}
               >
                 Send
