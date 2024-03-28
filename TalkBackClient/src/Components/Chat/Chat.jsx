@@ -13,7 +13,6 @@ export default function Chat() {
   const [selectedUser, setSelectedUser] = useState({});
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState([]);
-
   useEffect(() => {
     // Listen for 'receiveMessage' event from the server
     userSocket.on("receiveMessage", (message) => {
@@ -29,9 +28,10 @@ export default function Chat() {
   const sendMessage = () => {
     if (messageInput.trim() !== "") {
       // Emit 'sendMessage' event to the server
-      userSocket.emit("sendMessage", messageInput);
+      userSocket.emit("sendMessage", messageInput, selectedUser);
       console.log(messageInput);
       setMessageInput("");
+      // Your submit logic here
     }
   };
 
@@ -64,12 +64,16 @@ export default function Chat() {
               </Typography>
               <MyChat />
               <HisChat />
-              <Box sx={{ display: "flex", alignItems: "flex-end" }}>
+              <Box
+                height={700}
+                sx={{ display: "flex", alignItems: "flex-end" }}
+              >
                 <TextField
                   sx={{ flex: 1, mr: 1 }}
                   id="standard-basic "
                   label="Type your message here"
                   variant="standard"
+                  value={messageInput}
                   onChange={(e) => setMessageInput(e.target.value)}
                 />
                 <Button
