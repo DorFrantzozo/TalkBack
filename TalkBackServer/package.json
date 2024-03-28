@@ -9,7 +9,7 @@
     "start:AccessControl": "nodemon ./Talkback.AccessControl/app.js",
     "start:OnlineUsers": "nodemon ./Tackback.OnlineUsers/app.js",
     "start:Chat": "nodemon ./Tackback.Chat/app.js",
-    "start:all-needed": "concurrently \"nodemon ./Talkback.AccessControl/app.js\" \"nodemon ./Tackback.OnlineUsers/app.js\""
+    "start:all": "concurrently \"nodemon ./Talkback.AccessControl/app.js\" \"nodemon ./Tackback.OnlineUsers/app.js\" \"nodemon ./Tackback.Chat/app.js\""
   },
   "keywords": [],
   "author": "",

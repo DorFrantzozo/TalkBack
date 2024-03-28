@@ -1,5 +1,6 @@
 import express from "express";
 import router from "./Routes/chatRouter.js";
+import cors from "cors";
 
 const app = express();
 const port = 3002;

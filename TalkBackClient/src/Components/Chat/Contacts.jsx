@@ -6,7 +6,7 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Avatar from "@mui/material/Avatar";
 import Typography from "@mui/material/Typography";
-import { socket } from "../../utils/Socket";
+import { userSocket } from "../../services/userSocketService";
 import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
 
@@ -27,7 +27,7 @@ export default function Contacts(props) {
 
     if (onlineusers) {
       const filteredIds = Object.keys(onlineusers).filter(
-        (id) => socket.id !== id
+        (id) => userSocket.id !== id
       );
       const filteredUsers = filteredIds.map((id) => onlineusers[id].name);
       setOnlineUsers(filteredUsers);
@@ -35,10 +35,10 @@ export default function Contacts(props) {
   };
 
   useEffect(() => {
-    socket.on("updateOnlineUsers", handleUpdateUsers);
+    userSocket.on("updateOnlineUsers", handleUpdateUsers);
 
     return () => {
-      socket.off("updateOnlineUsers", handleUpdateUsers);
+      userSocket.off("updateOnlineUsers", handleUpdateUsers);
     };
   }, []);
 
@@ -46,10 +46,10 @@ export default function Contacts(props) {
     <>
       <List sx={{ width: "100%", maxWidth: 360 }}>
         {onlineUsers.length !== 0 ? (
-          onlineUsers.map((user) => (
+          onlineUsers.map((user, index) => (
             // eslint-disable-next-line react/jsx-key
             <Button onClick={() => handleSelectedUser(user)}>
-              <ListItem key={user} disableGutters>
+              <ListItem key={index} disableGutters>
                 <ListItemAvatar>
                   <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" />
                 </ListItemAvatar>

@@ -10,7 +10,7 @@ import {
   logoutTokenValidation,
   getUser,
 } from "../services/authService";
-import { SocketManager, socket } from "../utils/Socket";
+import { userSocketManager } from "../services/userSocketService";
 
 export const AuthContext = createContext({
   name: null,
@@ -27,7 +27,7 @@ export const AuthProvider = () => {
       setIsLogIn(true);
       const user = await getUser();
       console.log(user);
-      SocketManager.connect();
+      userSocketManager.connect();
       setName(user.name);
     }
   }, []);
@@ -36,14 +36,14 @@ export const AuthProvider = () => {
       setIsLogIn(true);
       const user = await getUser();
       console.log(user);
-      SocketManager.connect();
+      userSocketManager.connect();
       setName(user.name);
     }
   }, []);
   const logout = useCallback(() => {
     if (logoutTokenValidation()) {
       setIsLogIn(false);
-      SocketManager.disconnect();
+      userSocketManager.disconnect();
       setName(null);
     }
   }, []);
