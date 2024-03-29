@@ -9,6 +9,8 @@ import Typography from "@mui/material/Typography";
 import { userSocket } from "../../services/userSocketService";
 import { useState, useEffect } from "react";
 import { Button } from "@mui/material";
+import AlertNewUser from "./designCOmponent/AlertNewUser";
+import { toast } from "react-toastify";
 
 // eslint-disable-next-line react/prop-types
 export default function Contacts({ handleSelected }) {
@@ -31,6 +33,7 @@ export default function Contacts({ handleSelected }) {
         filteredUsers[index] = { id, name: onlineusers[id].name };
 
         console.log(index, filteredUsers[index]);
+        alertLogIn(filteredUsers[index]);
       });
       console.log(filteredUsers);
       setOnlineUsers(filteredUsers);
@@ -45,8 +48,21 @@ export default function Contacts({ handleSelected }) {
     };
   }, []);
 
+  const alertLogIn = (user) => {
+    toast.success(`${user.name} is online`, {
+      position: "top-right",
+      autoClose: 4000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: false,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+    });
+  };
   return (
     <>
+      <AlertNewUser />
       <List sx={{ width: "100%", maxWidth: 360 }}>
         {onlineUsers.length !== 0 ? (
           Object.values(onlineUsers).map((user, index) => (
