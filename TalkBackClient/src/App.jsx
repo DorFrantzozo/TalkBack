@@ -8,11 +8,13 @@ import SignIn from "./Components/Login/Signin";
 import Chat from "./Components/Chat/Chat";
 import { AuthContext, AuthProvider } from "./context/authContext";
 function App() {
-  const { isLoggedin, login, logout, name } = AuthProvider();
+  const { isLoggedin, login, logout, name, onlineUsers } = AuthProvider();
 
   return (
     <>
-      <AuthContext.Provider value={{ isLoggedin, login, logout, name }}>
+      <AuthContext.Provider
+        value={{ isLoggedin, login, logout, name, onlineUsers }}
+      >
         <BrowserRouter>
           <Navbar />
           <Routes>

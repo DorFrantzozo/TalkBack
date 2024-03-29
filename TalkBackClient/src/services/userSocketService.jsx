@@ -19,4 +19,22 @@ export const userSocketManager = {
     userSocket.off("user:connect");
     userSocket.disconnect();
   },
+
+  handleUpdateUsers(onlineusers) {
+    console.log(onlineusers);
+
+    if (onlineusers) {
+      const filteredIds = Object.keys(onlineusers).filter(
+        (id) => userSocket.id !== id
+      );
+      const filteredUsers = {};
+      filteredIds.map((id, index) => {
+        filteredUsers[index] = { id, name: onlineusers[id].name };
+
+        console.log(index, filteredUsers[index]);
+      });
+      console.log(filteredUsers);
+      return filteredUsers;
+    }
+  },
 };

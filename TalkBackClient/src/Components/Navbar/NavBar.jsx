@@ -98,7 +98,7 @@ function ResponsiveAppBar() {
                   <MenuItem
                     key={page}
                     component={Link}
-                    to={`/${page}`}
+                    to={auth.isLoggedin ? `/${page}` : `/signin`}
                     onClick={handleCloseNavMenu}
                   >
                     <Typography textAlign="center">{page}</Typography>
@@ -165,6 +165,8 @@ function ResponsiveAppBar() {
                 >
                   {settings.map((setting) => (
                     <MenuItem
+                      component={Link}
+                      to={"/signin"}
                       key={setting}
                       onClick={
                         setting === "Logout"
