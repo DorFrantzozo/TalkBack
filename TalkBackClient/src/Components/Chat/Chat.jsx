@@ -11,6 +11,9 @@ import { useState, useEffect, useContext } from "react";
 import { userSocket } from "../../services/userSocketService";
 import { AuthContext } from "../../context/authContext";
 import CasinoIcon from "@mui/icons-material/Casino";
+import AlertNewUser from "./designCOmponent/AlertNewUser";
+import { toast } from "react-toastify";
+import Divider from "@mui/material/Divider";
 
 export default function Chat() {
   const [selectedUser, setSelectedUser] = useState({});
@@ -58,6 +61,7 @@ export default function Chat() {
   return (
     <>
       <ThemeProvider theme={theme}>
+        <AlertNewUser />
         <Box sx={{ flexGrow: 1, marginTop: "40px", padding: "30px" }}>
           <Grid container spacing={2}>
             <Grid item xs={12} md={3}>
@@ -67,14 +71,27 @@ export default function Chat() {
               >
                 Contacts
               </Typography>
-              <Contacts handleSelected={handleSelected} />
+              <Box sx={{ display: "flex" }}>
+                <Contacts handleSelected={handleSelected} />
+                <Divider
+                  orientation="vertical"
+                  variant="fullWidth"
+                  flexItem
+                  sx={{
+                    height: "1000px",
+                    color: "black",
+                    display: { xs: "none", md: "block" },
+                  }}
+                />
+              </Box>
             </Grid>
+
             <Grid item xs={12} md={9}>
               <Typography
                 variant="h4"
                 sx={{ display: "flex", justifyContent: "center", mb: "20px" }}
               >
-                {selectedUser ? selectedUser.name  : ""}
+                {selectedUser ? selectedUser.name : ""}
               </Typography>
               <Box>
                 {Object.values(messages).map((data, index) =>

@@ -10,18 +10,18 @@ import {
   logoutTokenValidation,
   getUser,
 } from "../services/authService";
-import { userSocketManager } from "../services/userSocketService";
-
+import { userSocketManager, userSocket } from "../services/userSocketService";
 export const AuthContext = createContext({
   name: null,
   isLoggedin: false,
+  onlineUsers: [],
   login: () => {},
   logout: () => {},
 });
 export const AuthProvider = () => {
   const [isLoggedin, setIsLogIn] = useState(false);
   const [name, setName] = useState(null);
-
+  const [onlineUsers, setOnlineUsers] = useState([]);
   useMemo(async () => {
     if (await loginTokenValidation()) {
       setIsLogIn(true);
@@ -48,6 +48,21 @@ export const AuthProvider = () => {
     }
   }, []);
 
+
+  const handleOnlineUsers = (onlineusers) => {
+    if (onlineusers)
+      setOnlineUsers(userSocketManager.handleUpdateUsers(onlineusers));
+ 
+  };
+
+  useEffect(() => {
+    userSocket.on("updateOnlineUsers", handleOnlineUsers);
+
+    return () => {
+      userSocket.off("updateOnlineUsers", handleOnlineUsers);
+    };
+  }, []);
+
   useEffect(() => {
     let refreshTimer;
 
@@ -59,5 +74,5 @@ export const AuthProvider = () => {
     };
   }, []);
 
-  return { isLoggedin, login, logout, name };
+  return { isLoggedin, login, logout, name, onlineUsers };
 };
