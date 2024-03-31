@@ -12,6 +12,7 @@ export const userSocketManager = {
       userSocket.connect();
     }
     userSocket.on("connect", this.handleUserConnect);
+    
   },
 
   disconnect() {
@@ -22,7 +23,13 @@ export const userSocketManager = {
     const user = await getUser();
     console.log(user);
     userSocket.emit("user:connect", user);
+    
+
+
   },
+
+
+
   handleAlert(alert) {
     if (alert.isOnline)
       toast.success(`${alert.name} is online`, {

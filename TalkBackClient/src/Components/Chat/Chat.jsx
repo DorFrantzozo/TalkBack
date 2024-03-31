@@ -11,7 +11,7 @@ import { useState, useEffect, useContext } from "react";
 import { userSocket } from "../../services/userSocketService";
 import { AuthContext } from "../../context/authContext";
 import CasinoIcon from "@mui/icons-material/Casino";
-import AlertNewUser from "./designCOmponent/AlertNewUser";
+import GameInvite from "../Game/GameInvite";
 import Divider from "@mui/material/Divider";
 
 export default function Chat() {
@@ -20,6 +20,8 @@ export default function Chat() {
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [showTextField, setShowTextField] = useState(false);
+  const [openModal, setOpenModal] = React.useState(false);
+  const [sender, setSender] = useState(null);
 
   const auth = useContext(AuthContext);
   useEffect(() => {
@@ -65,10 +67,23 @@ export default function Chat() {
     console.log(filtered);
     return filtered;
   };
+
+  const handleInvite = () => {
+    userSocket.emit("sendInvite", selectedUser);
+  };
+
+  const handleGameInvite = (sender) => {
+    setSender(sender);
+    setOpenModal(true);
+  };
+
+  useEffect(() => {
+    userSocket.on("receiveInvite", handleGameInvite);
+  }, []);
+
   return (
     <>
       <ThemeProvider theme={theme}>
-        <AlertNewUser />
         <Box sx={{ flexGrow: 1, marginTop: "40px", padding: "30px" }}>
           <Grid container spacing={2}>
             <Grid item xs={12} md={3}>
@@ -99,6 +114,16 @@ export default function Chat() {
                 sx={{ display: "flex", justifyContent: "center", mb: "20px" }}
               >
                 {selectedUser.user ? selectedUser.user.name : ""}
+
+                {selectedUser && selectedUser.user && (
+                  <Button
+                    endIcon={<CasinoIcon />}
+                    onClick={handleInvite}
+                    sx={{ marginLeft: "30px" }}
+                  >
+                    Play now
+                  </Button>
+                )}
               </Typography>
               <Box>
                 {handleChatMessages().map((data, index) =>
@@ -136,6 +161,10 @@ export default function Chat() {
             </Grid>
           </Grid>
         </Box>
+        {openModal && (
+          <GameInvite user={sender} open={openModal} setOpen={setOpenModal} />
+        )}
+        ;
       </ThemeProvider>
     </>
   );
