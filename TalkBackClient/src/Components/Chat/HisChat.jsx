@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import { Avatar, Box, Paper, Typography } from "@mui/material";
 
 export default function HisChat({ data }) {
-  const { name, message } = JSON.parse(data);
+  const { sender, message } = JSON.parse(data);
   return (
     <Stack spacing={3}>
       {/* For variant="text", adjust the height via font-size */}
@@ -14,7 +14,7 @@ export default function HisChat({ data }) {
 
         <Box sx={{ display: "flex", flexDirection: "column", marginBottom: 2 }}>
           <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-            {name}
+            {sender.name}
           </Typography>
           <Paper
             elevation={8}

@@ -1,4 +1,3 @@
-import * as React from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -15,7 +14,6 @@ import myLogo from "../../assets/Images/Logo.png";
 import { useState, useContext } from "react";
 import { theme } from "../../assets/Themes/colors";
 import { ThemeProvider } from "@emotion/react";
-// import { Link as MuiLink } from "@mui/material";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 

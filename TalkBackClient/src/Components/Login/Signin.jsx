@@ -1,4 +1,3 @@
-import * as React from "react";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -11,10 +10,9 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../assets/Themes/colors";
 import { useContext, useState } from "react";
-// import axios, { Axios, AxiosError } from "axios";
 import { postSignin } from "../../services/authService";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
@@ -64,7 +62,7 @@ export default function SignIn() {
       setErrorMessage(errors);
       return;
     }
-    await auth.login();
+    auth.login();
     navigate("/");
   };
 

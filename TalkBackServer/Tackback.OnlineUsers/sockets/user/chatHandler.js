@@ -4,9 +4,9 @@ export default function chatHandler(socket) {
     // When the client sends a message
     console.log("Message received:", message);
     // Broadcast the message to all connected clients
-    console.log(user);
     const sender = getUserName(socket.id);
-    socket.to(user.id).emit("receiveMessage", message, sender.name);
+    console.log(user, sender);
+    socket.to(user.key).emit("receiveMessage", message, sender);
   };
   socket.on("sendMessage", sendMessage);
 }

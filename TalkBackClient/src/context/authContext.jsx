@@ -12,7 +12,7 @@ import {
 } from "../services/authService";
 import { userSocketManager, userSocket } from "../services/userSocketService";
 export const AuthContext = createContext({
-  name: null,
+  user: null,
   isLoggedin: false,
   onlineUsers: [],
   login: () => {},
@@ -20,15 +20,16 @@ export const AuthContext = createContext({
 });
 export const AuthProvider = () => {
   const [isLoggedin, setIsLogIn] = useState(false);
-  const [name, setName] = useState(null);
+  const [user, setUser] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
+
   useMemo(async () => {
     if (await loginTokenValidation()) {
       setIsLogIn(true);
       const user = await getUser();
       console.log(user);
       userSocketManager.connect();
-      setName(user.name);
+      setUser(user);
     }
   }, []);
   const login = useCallback(async () => {
@@ -37,27 +38,27 @@ export const AuthProvider = () => {
       const user = await getUser();
       console.log(user);
       userSocketManager.connect();
-      setName(user.name);
+      setUser(user);
     }
   }, []);
-  const logout = useCallback(() => {
-    if (logoutTokenValidation()) {
+  const logout = useCallback(async () => {
+    if (await logoutTokenValidation()) {
+      console.log("ger");
       setIsLogIn(false);
       userSocketManager.disconnect();
-      setName(null);
+      setUser(null);
     }
   }, []);
 
-
-  const handleOnlineUsers = (onlineusers) => {
+  const handleOnlineUsers = (onlineusers, alert) => {
     if (onlineusers)
       setOnlineUsers(userSocketManager.handleUpdateUsers(onlineusers));
- 
+    console.log(alert);
+    if (alert) userSocketManager.handleAlert(alert);
   };
 
   useEffect(() => {
     userSocket.on("updateOnlineUsers", handleOnlineUsers);
-
     return () => {
       userSocket.off("updateOnlineUsers", handleOnlineUsers);
     };
@@ -74,5 +75,5 @@ export const AuthProvider = () => {
     };
   }, []);
 
-  return { isLoggedin, login, logout, name, onlineUsers };
+  return { isLoggedin, login, logout, user, onlineUsers };
 };

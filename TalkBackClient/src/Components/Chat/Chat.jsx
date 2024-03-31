@@ -12,10 +12,10 @@ import { userSocket } from "../../services/userSocketService";
 import { AuthContext } from "../../context/authContext";
 import CasinoIcon from "@mui/icons-material/Casino";
 import AlertNewUser from "./designCOmponent/AlertNewUser";
-import { toast } from "react-toastify";
 import Divider from "@mui/material/Divider";
 
 export default function Chat() {
+  const [hasNewMessage, setHasNewMessage] = useState(false);
   const [selectedUser, setSelectedUser] = useState({});
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState([]);
@@ -28,7 +28,7 @@ export default function Chat() {
 
     // Clean up socket connection on component unmount
     return () => {
-      userSocket.off("receiveMessage");
+      userSocket.off("receiveMessage", handleReceiveMessage);
     };
   }, []);
 
@@ -38,26 +38,33 @@ export default function Chat() {
 
       setMessages((perv) => [
         ...perv,
-        { isSelf: true, message: messageInput, name: auth.name },
+        { isSelf: true, message: messageInput, sender: selectedUser.user },
       ]);
       userSocket.emit("sendMessage", messageInput, selectedUser);
-      console.log(messageInput);
       setMessageInput("");
-      // Your submit logic here
     }
   };
-  const handleReceiveMessage = (message, name) => {
-    console.log(message, name);
-    setMessages((perv) => [...perv, { isSelf: false, message, name }]);
+  const handleReceiveMessage = (message, sender) => {
+    if (selectedUser !== sender.id) {
+      setHasNewMessage(true);
+    }
+    console.log(message, sender.name);
+    setMessages((perv) => [...perv, { isSelf: false, message, sender }]);
   };
 
-  const handleSelected = (selectedUser) => {
+  const handleSelected = (selected) => {
     setShowTextField(true);
-    const user = JSON.parse(selectedUser);
+    const user = JSON.parse(selected);
     setSelectedUser(user);
-    console.log(user);
   };
 
+  const handleChatMessages = () => {
+    const filtered = messages.filter(
+      (message) => message.sender.id === selectedUser.user.id
+    );
+    console.log(filtered);
+    return filtered;
+  };
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -91,10 +98,10 @@ export default function Chat() {
                 variant="h4"
                 sx={{ display: "flex", justifyContent: "center", mb: "20px" }}
               >
-                {selectedUser ? selectedUser.name : ""}
+                {selectedUser.user ? selectedUser.user.name : ""}
               </Typography>
               <Box>
-                {Object.values(messages).map((data, index) =>
+                {handleChatMessages().map((data, index) =>
                   data.isSelf ? (
                     <MyChat key={index} data={JSON.stringify(data)} />
                   ) : (

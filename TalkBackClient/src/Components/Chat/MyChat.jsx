@@ -3,7 +3,7 @@ import Stack from "@mui/material/Stack";
 import { Avatar, Box, Paper, Typography } from "@mui/material";
 // eslint-disable-next-line react/prop-types
 export default function MyChat({ data }) {
-  const { name, message } = JSON.parse(data);
+  const { sender, message } = JSON.parse(data);
   console.log(name);
   return (
     <Stack spacing={3}>
@@ -18,7 +18,7 @@ export default function MyChat({ data }) {
 
         <Box sx={{ display: "flex", flexDirection: "column", marginBottom: 2 }}>
           <Typography variant="subtitle2" color="textSecondary" gutterBottom>
-            {name}
+            {sender.name}
           </Typography>
           <Paper
             elevation={8}

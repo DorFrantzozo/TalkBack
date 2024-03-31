@@ -8,47 +8,59 @@ export const userSocket = io("http://localhost:3001/user", {
 });
 export const userSocketManager = {
   connect() {
-    userSocket.connect();
-    userSocket.on("connect", async () => {
-      const user = await getUser();
-      console.log(user);
-      userSocket.emit("user:connect", user);
-    });
+    if (!userSocket.connected) {
+      userSocket.connect();
+    }
+    userSocket.on("connect", this.handleUserConnect);
   },
 
   disconnect() {
-    userSocket.off("user:connect");
+    userSocket.off("connect", this.handleUserConnect);
     userSocket.disconnect();
   },
-
+  async handleUserConnect() {
+    const user = await getUser();
+    console.log(user);
+    userSocket.emit("user:connect", user);
+  },
+  handleAlert(alert) {
+    if (alert.isOnline)
+      toast.success(`${alert.name} is online`, {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    else
+      toast.error(`${alert.name} got offline`, {
+        position: "top-right",
+        autoClose: 4000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: false,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+  },
   handleUpdateUsers(onlineusers) {
-    console.log(onlineusers);
-
     if (onlineusers) {
       const filteredIds = Object.keys(onlineusers).filter(
         (id) => userSocket.id !== id
       );
       const filteredUsers = {};
-      filteredIds.map((id, index) => {
-        filteredUsers[index] = { id, name: onlineusers[id].name };
-
-        console.log(index, filteredUsers[index]);
-        alertLogIn(filteredUsers[index].name);
+      filteredIds.map((id) => {
+        filteredUsers[id] = {
+          id: onlineusers[id].id,
+          name: onlineusers[id].name,
+        };
       });
       console.log(filteredUsers);
       return filteredUsers;
     }
   },
-};
-const alertLogIn = (name) => {
-  toast.success(`${name} is online`, {
-    position: "top-right",
-    autoClose: 4000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: false,
-    draggable: true,
-    progress: undefined,
-    theme: "colored",
-  });
 };

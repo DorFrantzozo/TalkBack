@@ -15,21 +15,25 @@ import { Button } from "@mui/material";
 export default function Contacts({ handleSelected }) {
   // const [onlineUsers, setOnlineUsers] = useState([]);
   const auth = useContext(AuthContext);
-  const handleSelectedUser = (user) => {
-    handleSelected(JSON.stringify(user));
-    console.log(user);
+  const handleSelectedUser = (user, key) => {
+    handleSelected(JSON.stringify({ user, key }));
+    console.log(user, key);
   };
-  console.log(auth.onlineUsers);
 
   return (
     <>
       <List sx={{ width: "100%", maxWidth: 360 }}>
         {auth.onlineUsers.length !== 0 ? (
-          Object.values(auth.onlineUsers).map((user, index) => (
+          Object.keys(auth.onlineUsers).map((key, index) => (
             <Button
               key={index}
-              onClick={() => handleSelectedUser(user)}
-              sx={{marginLeft:"auto",marginRight:"auto",width:"100%",maxWidth:360}}
+              onClick={() => handleSelectedUser(auth.onlineUsers[key], key)}
+              sx={{
+                marginLeft: "auto",
+                marginRight: "auto",
+                width: "100%",
+                maxWidth: 360,
+              }}
             >
               <ListItem key={index} disableGutters>
                 <ListItemAvatar>
@@ -45,7 +49,7 @@ export default function Contacts({ handleSelected }) {
                   </OnlineBadge>
                 </ListItemAvatar>
                 <ListItemText
-                  primary={user.name}
+                  primary={auth.onlineUsers[key].name}
                   secondary={
                     <React.Fragment>
                       <Typography
