@@ -15,6 +15,10 @@ export default function AlertDialogSlide({ user, open, setOpen }) {
   const handleClose = () => {
     setOpen(false);
   };
+  const handleDisagreeToPlay = () => {
+    alert(`${user.name} Disagree to play`);
+    setOpen(false);
+  };
 
   return (
     <React.Fragment>
@@ -30,7 +34,7 @@ export default function AlertDialogSlide({ user, open, setOpen }) {
           <DialogContentText id="alert-dialog-slide-description"></DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Disagree</Button>
+          <Button onClick={handleDisagreeToPlay}>Disagree</Button>
           <Button onClick={handleClose}>Agree</Button>
         </DialogActions>
       </Dialog>

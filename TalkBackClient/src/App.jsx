@@ -22,7 +22,7 @@ function App() {
             {!isLoggedin && <Route path="/signup" element={<Signup />} />},
             {!isLoggedin && <Route path="/signin" element={<SignIn />} />},
             {<Route path="/chat" element={<Chat />} />}
-            {<Route path="/game" element={<Game />} />}
+            {<Route path="/Game" element={<Game />} />}
           </Routes>
         </BrowserRouter>
       </AuthContext.Provider>
