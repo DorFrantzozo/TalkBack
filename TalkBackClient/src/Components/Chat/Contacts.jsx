@@ -17,13 +17,12 @@ export default function Contacts({ handleSelected }) {
   const auth = useContext(AuthContext);
   const handleSelectedUser = (user, key) => {
     handleSelected(JSON.stringify({ user, key }));
-    console.log(user, key);
   };
 
   return (
     <>
       <List sx={{ width: "100%", maxWidth: 360 }}>
-        {auth.onlineUsers.length !== 0 ? (
+        {Object.keys(auth.onlineUsers).length !== 0 ? (
           Object.keys(auth.onlineUsers).map((key, index) => (
             <Button
               key={index}
