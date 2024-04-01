@@ -1,7 +1,7 @@
 import Navbar from "./Components/Navbar/NavBar";
 import Landing from "./Components/LandingPage/Landing";
 import Signup from "./Components/Signup/Signup";
-import Game from "./Components/Game/Board";
+import Game from "./Components/Game/Game";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignIn from "./Components/Login/Signin";

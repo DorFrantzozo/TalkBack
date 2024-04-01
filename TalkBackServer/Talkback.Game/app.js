@@ -1,9 +1,8 @@
 import express from "express";
 import cors from "cors";
 import router from "./Routes/authRoutes.js";
-import connectDB from "./config/database.js";
 const app = express();
-const PORT = 3000;
+const PORT = 3004;
 
 app.use(
   cors({
