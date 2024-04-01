@@ -7,8 +7,18 @@ import { theme } from "../../assets/Themes/colors";
 import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { useState,useContext } from "react";
+import { AuthProvider } from "../../context/authContext";
 
 const Landing = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const chackIfLoggedIn = async () => {
+
+    }
+  }
+
+
   return (
     <ThemeProvider theme={theme}>
       <Box

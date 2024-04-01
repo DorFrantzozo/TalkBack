@@ -1,9 +1,11 @@
 import React from "react";
+import { Box } from "@mui/material";
 
+// eslint-disable-next-line react/prop-types
 export default function Square({ choosSquare, value }) {
   return (
-    <div className="square" onClick={choosSquare}>
+    <Box className="square" onClick={choosSquare}>
       {value}
-    </div>
+    </Box>
   );
 }

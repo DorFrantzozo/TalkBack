@@ -23,7 +23,7 @@ export default function Chat() {
   const [openModal, setOpenModal] = React.useState(false);
   const [sender, setSender] = useState(null);
 
-  const auth = useContext(AuthContext);
+ 
   useEffect(() => {
     // Listen for 'receiveMessage' event from the server
     userSocket.on("receiveMessage", handleReceiveMessage);
@@ -81,6 +81,7 @@ export default function Chat() {
     userSocket.on("receiveInvite", handleGameInvite);
   }, []);
 
+  
   return (
     <>
       <ThemeProvider theme={theme}>

@@ -1,7 +1,7 @@
 import Navbar from "./Components/Navbar/NavBar";
 import Landing from "./Components/LandingPage/Landing";
 import Signup from "./Components/Signup/Signup";
-import Game from "./Components/Game/Game";
+import GamePage from "./Components/Game/GamePage";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignIn from "./Components/Login/Signin";
@@ -22,7 +22,7 @@ function App() {
             {!isLoggedin && <Route path="/signup" element={<Signup />} />},
             {!isLoggedin && <Route path="/signin" element={<SignIn />} />},
             {<Route path="/chat" element={<Chat />} />}
-            {<Route path="/Game" element={<Game />} />}
+            {<Route path="/Game" element={<GamePage />} />}
           </Routes>
         </BrowserRouter>
       </AuthContext.Provider>
