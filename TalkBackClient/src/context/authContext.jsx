@@ -27,7 +27,6 @@ export const AuthProvider = () => {
     if (await loginTokenValidation()) {
       setIsLogIn(true);
       const user = await getUser();
-      console.log(user);
       userSocketManager.connect();
       setUser(user);
     }
@@ -36,14 +35,12 @@ export const AuthProvider = () => {
     if (await loginTokenValidation()) {
       setIsLogIn(true);
       const user = await getUser();
-      console.log(user);
       userSocketManager.connect();
       setUser(user);
     }
   }, []);
   const logout = useCallback(async () => {
     if (await logoutTokenValidation()) {
-      console.log("ger");
       setIsLogIn(false);
       userSocketManager.disconnect();
       setUser(null);
@@ -53,7 +50,6 @@ export const AuthProvider = () => {
   const handleOnlineUsers = (onlineusers, alert) => {
     if (onlineusers)
       setOnlineUsers(userSocketManager.handleUpdateUsers(onlineusers));
-    console.log(alert);
     if (alert) userSocketManager.handleAlert(alert);
   };
 

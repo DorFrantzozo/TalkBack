@@ -1,8 +1,15 @@
 const OnlineUsers = {};
-export const getUserName = (id) => {
+export const getUserBySocketId = (id) => {
   if (OnlineUsers[id]) return OnlineUsers[id];
   return null;
 };
+export const getUserByUserId = (id) => {
+  const userSocketit = Object.keys(OnlineUsers).find(
+    (key) => OnlineUsers[key].id === id
+  );
+  return OnlineUsers[userSocketit];
+};
+
 const userVerification = (id) => {
   return Object.values(OnlineUsers).some((user) => user.id === id);
 };

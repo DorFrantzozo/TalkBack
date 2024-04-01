@@ -1,18 +1,19 @@
 import MyChat from "./MyChat";
 import HisChat from "./HisChat";
-import React from "react";
+import React, { useContext } from "react";
 import { Box, TextField, Typography, Button } from "@mui/material";
 import Contacts from "./Contacts";
 import Grid from "@mui/material/Grid";
 import SendIcon from "@mui/icons-material/Send";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../assets/Themes/colors";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { userSocket } from "../../services/userSocketService";
-import { AuthContext } from "../../context/authContext";
 import CasinoIcon from "@mui/icons-material/Casino";
 import GameInvite from "../Game/GameInvite";
 import Divider from "@mui/material/Divider";
+import { handleSendeMessage } from "../../services/chatService";
+import { AuthContext } from "../../context/authContext";
 
 export default function Chat() {
   const [hasNewMessage, setHasNewMessage] = useState(false);
@@ -34,23 +35,34 @@ export default function Chat() {
     };
   }, []);
 
-  const handlesendMessage = () => {
+  const handlesendMessage = async () => {
     if (messageInput.trim() !== "") {
       // Emit 'sendMessage' event to the server
+      console.log("here");
+      const messageStatus = await handleSendeMessage(
+        messageInput,
+        selectedUser
+      );
 
+      console.log(messageStatus);
+      if (!messageStatus) {
+        alert("message didnt Send");
+        return;
+      }
       setMessages((perv) => [
         ...perv,
-        { isSelf: true, message: messageInput, sender: selectedUser.user },
+        { isSelf: true, message: messageInput, sender: auth.user },
       ]);
-      userSocket.emit("sendMessage", messageInput, selectedUser);
+
+      // userSocket.emit("sendMessage", messageInput, selectedUser);
       setMessageInput("");
     }
   };
   const handleReceiveMessage = (message, sender) => {
+    console.log(message, sender);
     if (selectedUser !== sender.id) {
       setHasNewMessage(true);
     }
-    console.log(message, sender.name);
     setMessages((perv) => [...perv, { isSelf: false, message, sender }]);
   };
 
@@ -61,10 +73,12 @@ export default function Chat() {
   };
 
   const handleChatMessages = () => {
+    if (Object.keys(selectedUser).length === 0) {
+      return [];
+    }
     const filtered = messages.filter(
-      (message) => message.sender.id === selectedUser.user.id
+      (message) => message.sender.id === selectedUser.user.id || message.isSelf
     );
-    console.log(filtered);
     return filtered;
   };
 
@@ -114,7 +128,9 @@ export default function Chat() {
                 variant="h4"
                 sx={{ display: "flex", justifyContent: "center", mb: "20px" }}
               >
-                {selectedUser.user ? selectedUser.user.name : ""}
+                {selectedUser && selectedUser.user
+                  ? selectedUser.user.name
+                  : ""}
 
                 {selectedUser && selectedUser.user && (
                   <Button

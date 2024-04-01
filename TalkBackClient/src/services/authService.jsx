@@ -3,7 +3,7 @@ const AUTH_API_URL = "http://localhost:3000";
 const service = axios.create({
   baseURL: AUTH_API_URL,
 });
-
+export let AuthAccessToken = {};
 const refreshTokenValidation = async (token) => {
   try {
     const response = await service.put("/token", { token });
@@ -34,6 +34,7 @@ const deassignTokens = async () => {
 
 const assignTokens = async (accessToken, refreshToken) => {
   service.defaults.headers.common["Authorization"] = `Bearer ${accessToken}`;
+  AuthAccessToken = `Bearer ${accessToken}`;
   localStorage.setItem("token", JSON.stringify(refreshToken));
 };
 export const loginTokenValidation = async () => {
