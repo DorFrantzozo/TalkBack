@@ -9,4 +9,13 @@ export default function chatHandler(socket) {
     socket.to(user.key).emit("receiveMessage", message, sender);
   };
   socket.on("sendMessage", sendMessage);
+
+  // game invite
+  const sendInvite = (user) => {
+    const sender = getUserName(socket.id);
+    socket.to(user.key).emit("receiveInvite", sender);
+    console.log("Invite from :", sender);
+    console.log(socket.id, sender);
+  };
+  socket.on("sendInvite", sendInvite);
 }
