@@ -1,24 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Button, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../assets/Themes/colors";
 import { Link } from "react-router-dom";
 import Grid from "@mui/material/Grid";
-import useMediaQuery from "@mui/material/useMediaQuery";
-import { useState,useContext } from "react";
-import { AuthProvider } from "../../context/authContext";
+import { AuthContext } from "../../context/authContext";
 
 const Landing = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const chackIfLoggedIn = async () => {
-
-    }
-  }
-
-
+  const auth = useContext(AuthContext);
   return (
     <ThemeProvider theme={theme}>
       <Box
@@ -67,7 +58,7 @@ const Landing = () => {
               marginTop: "30px",
             }}
           >
-            <Link to={"/signin"}>
+            <Link to={auth.isLoggedin ? "/chat" : "/signin"}>
               <Button variant="contained" sx={{ color: "white" }}>
                 Chat and play now
               </Button>

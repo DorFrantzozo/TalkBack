@@ -18,8 +18,8 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/authContext";
 import AlertNewUser from "../designCOmponent/AlertNewUser";
 
-const pages = ["Game", "Chat", "About"];
-const settings = ["Profile", "Account", "Dashboard", "Logout"];
+const pages = ["Chat"];
+const settings = ["Logout"];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -44,8 +44,6 @@ function ResponsiveAppBar() {
     auth.logout();
   };
 
- 
-
   return (
     <ThemeProvider theme={theme}>
       <AlertNewUser />
@@ -61,6 +59,7 @@ function ResponsiveAppBar() {
               sx={{
                 mr: 2,
                 display: { xs: "none", md: "flex" },
+                justifyContent: { md: "center" },
                 letterSpacing: ".3rem",
                 color: "inherit",
                 textDecoration: "none",

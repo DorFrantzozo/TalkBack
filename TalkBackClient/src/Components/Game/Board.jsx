@@ -45,11 +45,11 @@ export default function Board() {
 
       if (checkWinner(newBoard, player)) {
         setWinner(player);
-        alert(`Game Over, ${player} won!`);
+        console.log(`Game Over, ${player} won!`);
         setBoard(Array(9).fill(""));
         setWinner(null);
       } else if (!newBoard.includes("")) {
-        alert("Draw!");
+        console.log("Draw!");
         setBoard(Array(9).fill(""));
         setWinner(null);
       }

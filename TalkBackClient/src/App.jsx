@@ -7,6 +7,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignIn from "./Components/Login/Signin";
 import Chat from "./Components/Chat/Chat";
 import { AuthContext, AuthProvider } from "./context/authContext";
+import Footer from "./Components/Footer/Footer";
 function App() {
   const { isLoggedin, login, logout, user, onlineUsers } = AuthProvider();
 
@@ -24,6 +25,7 @@ function App() {
             {<Route path="/chat" element={<Chat />} />}
             {<Route path="/Game" element={<GamePage />} />}
           </Routes>
+          <Footer />
         </BrowserRouter>
       </AuthContext.Provider>
     </>
