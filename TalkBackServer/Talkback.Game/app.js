@@ -1,8 +1,8 @@
 import express from "express";
 import cors from "cors";
-import router from "./Routes/authRoutes.js";
+import router from "./routes/gameRoutes.js";
 const app = express();
-const PORT = 3004;
+const PORT = 3003;
 
 app.use(
   cors({
@@ -12,3 +12,6 @@ app.use(
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/", router);
+app.listen(PORT, () => {
+  console.log(`Game MicroService on port ${PORT}`);
+});

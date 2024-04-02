@@ -3,11 +3,17 @@ export const getUserBySocketId = (id) => {
   if (OnlineUsers[id]) return OnlineUsers[id];
   return null;
 };
-export const getUserByUserId = (id) => {
-  const userSocketit = Object.keys(OnlineUsers).find(
+export const getSocketIdByUser = (id) => {
+  const userSocketid = Object.keys(OnlineUsers).find(
     (key) => OnlineUsers[key].id === id
   );
-  return OnlineUsers[userSocketit];
+  return userSocketid;
+};
+export const getUserByUserId = (id) => {
+  const userSocketid = Object.keys(OnlineUsers).find(
+    (key) => OnlineUsers[key].id === id
+  );
+  return OnlineUsers[userSocketid];
 };
 
 const userVerification = (id) => {
@@ -17,7 +23,6 @@ export default function chatHandler(socket) {
   const connectUser = (payload) => {
     const { name, id } = payload;
     if (userVerification(id)) {
-      console.log(id, OnlineUsers);
       socket.disconnect();
       console.log(`User ${name} attempted to open multiple connections.`);
       return;

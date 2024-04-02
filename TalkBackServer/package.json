@@ -9,10 +9,10 @@
     "start:AccessControl": "nodemon ./Talkback.AccessControl/app.js",
     "start:OnlineUsers": "nodemon ./Tackback.OnlineUsers/app.js",
     "start:Chat": "nodemon ./Tackback.Chat/app.js",
-    "start:all": "concurrently \"nodemon ./Talkback.AccessControl/app.js\" \"nodemon ./Tackback.OnlineUsers/app.js\" \"nodemon ./Tackback.Chat/app.js\""
+    "start:Game": "nodemon ./Talkback.Game/app.js",
+    "start:all": "concurrently \"nodemon ./Talkback.AccessControl/app.js\" \"nodemon ./Tackback.OnlineUsers/app.js\" \"nodemon ./Tackback.Chat/app.js\" \"nodemon ./Talkback.Game/app.js\""
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.6.8",

@@ -1,20 +1,26 @@
-import { getUserBySocketId, getUserByUserId } from "./userHandler.js";
-import userSocket from "./userSocket.js";
+import {
+  getUserBySocketId,
+  getUserByUserId,
+  getSocketIdByUser,
+} from "./userHandler.js";
+import serverSocket from "../ServerSockets.js";
 export default function chatHandler(socket) {
   // game invite
-  const sendInvite = (user) => {
+  const handleSendInvite = (user) => {
     const sender = getUserBySocketId(socket.id);
     socket.to(user.key).emit("receiveInvite", sender);
-    console.log("Invite from :", sender);
-    console.log(socket.id, sender);
   };
-  socket.on("sendInvite", sendInvite);
+  const handleAcceptInvite = (user) => {
+    const key = getSocketIdByUser(user.id);
+    const sender = getUserBySocketId(socket.id);
+    socket.to(key).emit("inviteAccepted", sender);
+  };
+  socket.on("sendInvite", handleSendInvite);
+  socket.on("AcceptInvite", handleAcceptInvite);
 }
 export const handleSendMessage = (message, user, senderid) => {
-  console.log(senderid);
-
   const sender = getUserByUserId(senderid);
-  console.log(sender);
-  userSocket.userNamespace.to(user.key).emit("receiveMessage", message, sender);
-  console.log("send");
+  serverSocket.userNamespace
+    .to(user.key)
+    .emit("receiveMessage", message, sender);
 };

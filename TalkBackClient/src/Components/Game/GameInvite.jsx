@@ -6,23 +6,30 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
-
-
-
-
+import gameManager from "../../services/gameService";
+import { AuthContext } from "../../context/authContext";
+import { userSocket } from "../../services/userSocketService";
+import { useNavigate } from "react-router-dom";
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
 export default function AlertDialogSlide({ user, open, setOpen }) {
+  const navigate = useNavigate();
+  const auth = React.useContext(AuthContext);
   const handleClose = () => {
     setOpen(false);
   };
   const handleDisagreeToPlay = () => {
-    alert(`${user.name} Disagree to play`);
     setOpen(false);
   };
-
+  const handleAgreeToPlay = () => {
+    setOpen(false);
+    console.log(user);
+    gameManager.handleStartGame(user.id, auth.user.id);
+    userSocket.emit("AcceptInvite", user);
+    navigate("/game");
+  };
   return (
     <React.Fragment>
       <Dialog
@@ -38,7 +45,7 @@ export default function AlertDialogSlide({ user, open, setOpen }) {
         </DialogContent>
         <DialogActions>
           <Button onClick={handleDisagreeToPlay}>Disagree</Button>
-          <Button onClick={handleClose}>Agree</Button>
+          <Button onClick={handleAgreeToPlay}>Agree</Button>
         </DialogActions>
       </Dialog>
     </React.Fragment>

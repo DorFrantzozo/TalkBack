@@ -14,6 +14,9 @@ import GameInvite from "../Game/GameInvite";
 import Divider from "@mui/material/Divider";
 import { handleSendeMessage } from "../../services/chatService";
 import { AuthContext } from "../../context/authContext";
+import { useNavigate } from "react-router-dom";
+import { gameSocket } from "../../services/gameService";
+import { getUser } from "../../services/authService";
 
 export default function Chat() {
   const [hasNewMessage, setHasNewMessage] = useState(false);
@@ -23,8 +26,8 @@ export default function Chat() {
   const [showTextField, setShowTextField] = useState(false);
   const [openModal, setOpenModal] = React.useState(false);
   const [sender, setSender] = useState(null);
-
- 
+  const navigate = useNavigate();
+  const auth = useContext(AuthContext);
   useEffect(() => {
     // Listen for 'receiveMessage' event from the server
     userSocket.on("receiveMessage", handleReceiveMessage);
@@ -90,12 +93,18 @@ export default function Chat() {
     setSender(sender);
     setOpenModal(true);
   };
+  const handleGameAccepted = async () => {
+    gameSocket.connect();
+    const self = await getUser();
+    gameSocket.emit("mount", self.id);
 
+    navigate("/game");
+  };
   useEffect(() => {
     userSocket.on("receiveInvite", handleGameInvite);
+    userSocket.on("inviteAccepted", handleGameAccepted);
   }, []);
 
-  
   return (
     <>
       <ThemeProvider theme={theme}>

@@ -4,56 +4,42 @@ import Box from "@mui/material/Box";
 import Square from "./Square";
 
 import "./ticTacToe.css";
-import { userSocket } from "../../services/userSocketService";
+import gameManager, { gameSocket } from "../../services/gameService";
 export default function Board() {
   const [board, setBoard] = useState(Array(9).fill(""));
   const [player, setPlayer] = useState("X");
-  const [winner, setWinner] = useState(null);
+  useEffect(() => {
+    gameSocket.on("init", handleInit);
+    gameSocket.on("opponentTurn", handleOpponentTurn);
+    gameSocket.on("endGame", handleEndGame);
 
-  const checkWinner = (board, player) => {
-    // Define all possible winning combinations
-    const winConditions = [
-      [0, 1, 2],
-      [3, 4, 5],
-      [6, 7, 8], // Rows
-      [0, 3, 6],
-      [1, 4, 7],
-      [2, 5, 8], // Columns
-      [0, 4, 8],
-      [2, 4, 6], // Diagonals
-    ];
+    return () => {
+      gameSocket.off("init", handleInit);
+      gameSocket.off("opponentTurn", handleOpponentTurn);
+      gameSocket.off("endGame", handleEndGame);
+    };
+  }, []);
 
-    // Check each winning combination
-    for (let i = 0; i < winConditions.length; i++) {
-      const [a, b, c] = winConditions[i];
-      if (board[a] === player && board[b] === player && board[c] === player) {
-        return true; // Player has won
-      }
-    }
-    return false; // No winner yet
+  const handleEndGame = async () => {
+    gameSocket.disconnect();
+    console.log("you Lost");
+    return;
   };
-
-  // Inside your Board component
-
-  const handleChooseSquare = (squareIndex) => {
-    if (!winner && board[squareIndex] === "") {
-      const newBoard = [...board];
-      newBoard[squareIndex] = player;
-      setBoard(newBoard);
-      setPlayer(player === "X" ? "O" : "X");
-      userSocket.emit("handleChooseSquare", squareIndex, player);
-
-      if (checkWinner(newBoard, player)) {
-        setWinner(player);
-        alert(`Game Over, ${player} won!`);
-        setBoard(Array(9).fill(""));
-        setWinner(null);
-      } else if (!newBoard.includes("")) {
-        alert("Draw!");
-        setBoard(Array(9).fill(""));
-        setWinner(null);
-      }
-    }
+  const handleOpponentTurn = async (newBoard) => {
+    gameManager.board = newBoard;
+    setBoard(gameManager.board);
+    gameManager.playerTurn = true;
+  };
+  const handleChooseSquare = async (squareIndex) => {
+    await gameManager.handleChooseSquare(squareIndex);
+    setBoard(gameManager.board);
+    console.log(gameManager.board);
+  };
+  const handleInit = async (gameId, oponnent) => {
+    console.log("game id :" + gameId);
+    gameManager.gameId = gameId;
+    gameManager.opponent = oponnent;
+    setPlayer("O");
   };
   return (
     <>
