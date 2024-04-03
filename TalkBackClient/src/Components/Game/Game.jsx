@@ -1,19 +1,29 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import Board from "./Board";
 import "./ticTacToe.css";
 import { Box, Typography } from "@mui/material";
-import gameManager from "../../services/gameService";
+import gameManager, { gameSocket } from "../../services/gameService";
 
 export default function Game() {
-  const opponent = gameManager.opponent.name;
-  console.log(opponent);
-
+  const [opponent, setOpponent] = useState(gameManager.opponent);
+  useEffect(() => {
+    gameSocket.on("init", handleInit);
+    return () => {
+      gameSocket.off("init", handleInit);
+    };
+  }, []);
+  const handleInit = async (gameId, opponent) => {
+    gameManager.gameId = gameId;
+    gameManager.opponent = opponent;
+    console.log(gameManager.opponent);
+    setOpponent(opponent);
+  };
   return (
     <>
       <Box
         sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
       >
-        <Typography>Playing vs {opponent}</Typography>
+        {opponent && <Typography>Playing vs {opponent.name}</Typography>}
       </Box>
       <Box
         height={750}

@@ -18,7 +18,7 @@ const gameManager = {
   async handleStartGame(opponent, self) {
     try {
       gameSocket.connect();
-      gameSocket.emit("mount", { self: self.id });
+      gameSocket.emit("mount", self.id);
       console.log(opponent);
       service.defaults.headers.common["Authorization"] = AuthAccessToken;
       this.opponent = opponent;

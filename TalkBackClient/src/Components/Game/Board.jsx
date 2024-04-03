@@ -5,17 +5,19 @@ import Square from "./Square";
 import { useNavigate } from "react-router-dom";
 import "./ticTacToe.css";
 import gameManager, { gameSocket } from "../../services/gameService";
+import { Typography } from "@mui/material";
+// eslint-disable-next-line react/prop-types
 export default function Board() {
   const navigate = useNavigate();
   const [board, setBoard] = useState(Array(9).fill(""));
-  const [player, setPlayer] = useState("X");
+  // const [player, setPlayer] = useState("X");
   useEffect(() => {
-    gameSocket.on("init", handleInit);
+    // gameSocket.on("init", handleInit);
     gameSocket.on("opponentTurn", handleOpponentTurn);
     gameSocket.on("endGame", handleEndGame);
 
     return () => {
-      gameSocket.off("init", handleInit);
+      // gameSocket.off("init", handleInit);
       gameSocket.off("opponentTurn", handleOpponentTurn);
       gameSocket.off("endGame", handleEndGame);
     };
@@ -49,12 +51,13 @@ export default function Board() {
       navigate("/chat");
     }
   };
-  const handleInit = async (gameId, oponnent) => {
-    console.log(oponnent);
-    gameManager.gameId = gameId;
-    gameManager.opponent = oponnent;
-    setPlayer("O");
-  };
+  // const handleInit = async (gameId, oponnent) => {
+  //   console.log(oponnent);
+  //   gameManager.gameId = gameId;
+  //   gameManager.opponent = oponnent;
+  //   console.log(oponnent);
+  //   // setPlayer("O");
+  // };
   return (
     <>
       <Box className="board">
