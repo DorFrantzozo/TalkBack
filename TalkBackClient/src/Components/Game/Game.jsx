@@ -6,6 +6,12 @@ export default function Game() {
   return (
     <>
       <Box
+        sx={{ display: "flex", justifyContent: "center", marginTop: "20px" }}
+      >
+        <Typography>Playing vs</Typography>
+      </Box>
+      <Box
+        height={750}
         sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
         className="gameContainer"
       >

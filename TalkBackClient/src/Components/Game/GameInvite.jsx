@@ -14,6 +14,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+// eslint-disable-next-line react/prop-types
 export default function AlertDialogSlide({ user, open, setOpen }) {
   const handleClose = () => {
     setOpen(false);

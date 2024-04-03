@@ -1,13 +1,14 @@
 import Navbar from "./Components/Navbar/NavBar";
 import Landing from "./Components/LandingPage/Landing";
 import Signup from "./Components/Signup/Signup";
-import GamePage from "./Components/Game/GamePage";
+import Game from "./Components/Game/Game";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import SignIn from "./Components/Login/Signin";
 import Chat from "./Components/Chat/Chat";
 import { AuthContext, AuthProvider } from "./context/authContext";
 import Footer from "./Components/Footer/Footer";
+
 function App() {
   const { isLoggedin, login, logout, user, onlineUsers } = AuthProvider();
 
@@ -23,7 +24,7 @@ function App() {
             {!isLoggedin && <Route path="/signup" element={<Signup />} />},
             {!isLoggedin && <Route path="/signin" element={<SignIn />} />},
             {<Route path="/chat" element={<Chat />} />}
-            {<Route path="/Game" element={<GamePage />} />}
+            {<Route path="/Game" element={<Game />} />}
           </Routes>
           <Footer />
         </BrowserRouter>
