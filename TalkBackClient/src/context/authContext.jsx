@@ -29,6 +29,7 @@ export const AuthProvider = () => {
       const user = await getUser();
       userSocketManager.connect();
       setUser(user);
+      console.log(user);
     }
   }, []);
   const login = useCallback(async () => {
@@ -37,6 +38,7 @@ export const AuthProvider = () => {
       const user = await getUser();
       userSocketManager.connect();
       setUser(user);
+      console.log(user);
     }
   }, []);
   const logout = useCallback(async () => {

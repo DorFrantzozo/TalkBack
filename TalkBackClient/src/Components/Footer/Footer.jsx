@@ -12,6 +12,8 @@ export default function Footer() {
           width: "100%",
           height: { xs: "auto", m: "auto" },
           bgcolor: "black",
+          display: "flex",
+          justifyContent: "flex-end",
         }}
       >
         <Container sx={{ display: { xs: "block", sm: "flex" } }}>

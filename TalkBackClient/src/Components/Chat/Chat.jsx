@@ -14,6 +14,9 @@ import GameInvite from "../Game/GameInvite";
 import Divider from "@mui/material/Divider";
 import { handleSendeMessage } from "../../services/chatService";
 import { AuthContext } from "../../context/authContext";
+import { useNavigate } from "react-router-dom";
+import { gameSocket } from "../../services/gameService";
+import { getUser } from "../../services/authService";
 
 export default function Chat() {
   const [hasNewMessage, setHasNewMessage] = useState(false);
@@ -23,8 +26,8 @@ export default function Chat() {
   const [showTextField, setShowTextField] = useState(false);
   const [openModal, setOpenModal] = React.useState(false);
   const [sender, setSender] = useState(null);
+  const navigate = useNavigate();
   const auth = useContext(AuthContext);
-
   useEffect(() => {
     // Listen for 'receiveMessage' event from the server
     userSocket.on("receiveMessage", handleReceiveMessage);
@@ -90,15 +93,29 @@ export default function Chat() {
     setSender(sender);
     setOpenModal(true);
   };
+  const handleGameAccepted = async () => {
+    gameSocket.connect();
+    const self = await getUser();
+    gameSocket.emit("mount", self.id);
 
+    navigate("/game");
+  };
   useEffect(() => {
     userSocket.on("receiveInvite", handleGameInvite);
+    userSocket.on("inviteAccepted", handleGameAccepted);
   }, []);
 
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Box sx={{ flexGrow: 1, marginTop: "40px", padding: "30px" }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            marginTop: "40px",
+            padding: "30px",
+            height: " 60vh",
+          }}
+        >
           <Grid container spacing={2}>
             <Grid item xs={12} md={3}>
               <Typography
@@ -114,7 +131,7 @@ export default function Chat() {
                   variant="fullWidth"
                   flexItem
                   sx={{
-                    height: "1000px",
+                    height: "",
                     color: "black",
                     display: { xs: "none", md: "block" },
                   }}
@@ -152,8 +169,11 @@ export default function Chat() {
               </Box>
               {showTextField && (
                 <Box
-                  height={700}
-                  sx={{ display: "flex", alignItems: "flex-end" }}
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-end",
+                    height: "auto",
+                  }}
                 >
                   <TextField
                     sx={{ flex: 1, mr: 1 }}

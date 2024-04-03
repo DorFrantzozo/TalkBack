@@ -1,11 +1,16 @@
 {
   "name": "talkbackui",
+  "productName": "TalkBack",
+  "author": "Dor fran, Alon ben-Zaken",
   "private": true,
-  "version": "0.0.0",
+  "version": "0.5.0",
+  "main": "./src/electron.js",
   "type": "module",
   "scripts": {
+    "electron": "electron .",
     "dev": "vite",
     "build": "vite build",
+    "package": "electron-packager .",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview"
   },
@@ -15,6 +20,7 @@
     "@mui/icons-material": "^5.15.14",
     "@mui/material": "^5.15.14",
     "axios": "^1.6.8",
+    "electron": "^29.1.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3",
@@ -25,10 +31,15 @@
     "@types/react": "^18.2.64",
     "@types/react-dom": "^18.2.21",
     "@vitejs/plugin-react": "^4.2.1",
+    "electron-packager": "^17.1.2",
     "eslint": "^8.57.0",
     "eslint-plugin-react": "^7.34.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "vite": "^5.1.6"
+  },
+  "build": {
+    "appId": "com.AlonNdor.TalkBack",
+    "files": "!build-assets${/*}"
   }
 }

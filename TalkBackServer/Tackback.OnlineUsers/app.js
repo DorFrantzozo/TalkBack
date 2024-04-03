@@ -1,6 +1,9 @@
 import express from "express";
-import userSocket from "./sockets/user/userSocket.js";
-import router from "./routes/handleChatRouter.js";
+import serverSocket from "./sockets/ServerSockets.js";
+
+import chatEventsRouter from "./routes/chatEventsRouter.js";
+import gameEventsRouter from "./routes/gameEventsRouter.js";
+
 import cors from "cors";
 const port = 3001;
 
@@ -9,12 +12,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(
   cors({
-    origin: ["http://localhost:3002"], // Allow requests only from this origin
+    origin: ["http://localhost:3002", "http://localhost:3003"], // Allow requests only from this origin
   })
 );
-app.use("/", router);
+app.use("/", chatEventsRouter);
+app.use("/", gameEventsRouter);
+
 const httpServer = app.listen(port, () => {
-  console.log(`Express server is running on port ${port}`);
+  console.log(`Online Users Microservice on port ${port}`);
 });
 
-userSocket.initialize(httpServer);
+serverSocket.initialize(httpServer);
