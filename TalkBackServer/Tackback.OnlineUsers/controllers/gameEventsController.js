@@ -23,6 +23,7 @@ const gameController = {
   async endGame_post(req, res) {
     try {
       const { winner, opponent } = req.body;
+      console.log(winner, opponent);
       gameHandler.handleEndGame(winner, opponent);
       res.sendStatus(200);
     } catch (error) {

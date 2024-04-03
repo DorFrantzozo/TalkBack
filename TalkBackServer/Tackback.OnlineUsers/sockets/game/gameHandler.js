@@ -10,9 +10,13 @@ const gameHandler = {
       .to(opponentSocket)
       .emit("opponentTurn", newBoard);
   },
-  handleEndGame(opponent) {
+  handleEndGame(winner, opponent) {
+    console.log(
+      "handle end game" + opponent,
+      serverSocket.activeGamePlayers[opponent]
+    );
     const opponentSocket = serverSocket.activeGamePlayers[opponent];
-    serverSocket.gameNamespace.to(opponentSocket).emit("endGame");
+    serverSocket.gameNamespace.to(opponentSocket).emit("endGame", winner);
   },
   handleStartGame(opponent, gameId, self) {
     const opponentSocket = serverSocket.activeGamePlayers[opponent];

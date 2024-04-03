@@ -33,14 +33,13 @@ const gameController = {
       if (!activeGames[gameId])
         res.status(400).json({ error: "gameId not found" }); // Send error response to client
       const player = activeGames[gameId].player1 === req.userid ? "X" : "O";
-      console.log("player =" + player);
       const { winner, newBoard } = activeGames[gameId].game.handleChooseSquare(
         squareIndex,
         player
       );
-      console.log(winner + " - winner");
       if (!newBoard) {
         res.status(200).json({ isValid, message: "Square not Valid" });
+        return;
       }
 
       const response = await service.post("/chooseSquare", {
@@ -50,7 +49,7 @@ const gameController = {
             ? activeGames[gameId].player2
             : activeGames[gameId].player1,
       });
-
+      console.log("winner - " + winner);
       if (winner) {
         await service.post("/endGame", {
           winner,
@@ -61,7 +60,9 @@ const gameController = {
         });
         delete activeGames[gameId];
       }
-      res.status(200).json({ newBoard, message: "choose Square Success" });
+      res
+        .status(200)
+        .json({ newBoard, winner, message: "choose Square Success" });
     } catch (error) {
       console.log(error);
       res.status(401).json({ error: "choose Square server error" }); // Send error response to client

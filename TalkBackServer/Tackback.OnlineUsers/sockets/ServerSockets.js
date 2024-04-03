@@ -38,7 +38,15 @@ const serverSocket = {
         this.activeGamePlayers[userid] = socket.id;
         console.log(`Active Game User ${userid}: ${socket.id}`);
       };
+      const handleUnMount = () => {
+        const key = Object.keys(this.activeGamePlayers).find(
+          (key) => this.activeGamePlayers[key] === socket.id
+        );
+        console.log(`Deactivate Game User ${key}: ${socket.id}`);
+        delete this.activeGamePlayers[key];
+      };
       socket.on("mount", handleMount);
+      socket.on("disconnect", handleUnMount);
     });
     console.log("initialize Game Socket");
   },
