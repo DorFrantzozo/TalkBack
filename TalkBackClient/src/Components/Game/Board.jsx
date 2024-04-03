@@ -2,10 +2,11 @@
 import React, { useEffect, useState } from "react";
 import Box from "@mui/material/Box";
 import Square from "./Square";
-
+import { useNavigate } from "react-router-dom";
 import "./ticTacToe.css";
 import gameManager, { gameSocket } from "../../services/gameService";
 export default function Board() {
+  const navigate = useNavigate();
   const [board, setBoard] = useState(Array(9).fill(""));
   const [player, setPlayer] = useState("X");
   useEffect(() => {
@@ -20,10 +21,14 @@ export default function Board() {
     };
   }, []);
 
-  const handleEndGame = async () => {
+  const handleEndGame = async (winner) => {
     gameSocket.disconnect();
-    console.log("you Lost");
-    return;
+    if (winner === "draw") {
+      alert("you draw");
+    } else {
+      alert("you Lost");
+    }
+    navigate("/chat");
   };
   const handleOpponentTurn = async (newBoard) => {
     gameManager.board = newBoard;
@@ -31,9 +36,18 @@ export default function Board() {
     gameManager.playerTurn = true;
   };
   const handleChooseSquare = async (squareIndex) => {
-    await gameManager.handleChooseSquare(squareIndex);
+    const winner = await gameManager.handleChooseSquare(squareIndex);
     setBoard(gameManager.board);
     console.log(gameManager.board);
+    if (winner) {
+      gameSocket.disconnect();
+      if (winner === "draw") {
+        alert("you draw");
+      } else {
+        alert("you won");
+      }
+      navigate("/chat");
+    }
   };
   const handleInit = async (gameId, oponnent) => {
     console.log("game id :" + gameId);

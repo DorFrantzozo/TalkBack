@@ -11,7 +11,7 @@ const service = axios.create({
   baseURL: GAME_API_URL,
 });
 const gameManager = {
-  board: null,
+  board: Array(9).fill(""),
   gameId: null,
   playerTurn: false,
   opponent: null,
@@ -31,6 +31,7 @@ const gameManager = {
         console.log(error);
         return;
       }
+      gameSocket.disconnect();
       throw error;
     }
   },
@@ -43,14 +44,16 @@ const gameManager = {
           gameId: this.gameId,
           squareIndex,
         });
-        const { newBoard, message } = response.data;
+        const { winner, newBoard, message } = response.data;
         if (!newBoard) {
           console.log(message);
           return;
         }
-        console.log(newBoard);
-        this.playerTurn = !this.playerTurn;
         this.board = newBoard;
+        if (winner) {
+          return winner;
+        }
+        this.playerTurn = !this.playerTurn;
       } else {
         console.log("that not your turn");
       }
@@ -60,6 +63,7 @@ const gameManager = {
         this.handleAlert({ isEnded: false, name: this.opponent });
       }
       console.log(error);
+      gameSocket.disconnect();
     }
   },
 
