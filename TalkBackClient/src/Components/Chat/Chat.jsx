@@ -108,7 +108,14 @@ export default function Chat() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Box sx={{ flexGrow: 1, marginTop: "40px", padding: "30px" }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            marginTop: "40px",
+            padding: "30px",
+            height: " 60vh",
+          }}
+        >
           <Grid container spacing={2}>
             <Grid item xs={12} md={3}>
               <Typography
@@ -124,7 +131,7 @@ export default function Chat() {
                   variant="fullWidth"
                   flexItem
                   sx={{
-                    height: "1000px",
+                    height: "",
                     color: "black",
                     display: { xs: "none", md: "block" },
                   }}
@@ -162,8 +169,11 @@ export default function Chat() {
               </Box>
               {showTextField && (
                 <Box
-                  height={700}
-                  sx={{ display: "flex", alignItems: "flex-end" }}
+                  sx={{
+                    display: "flex",
+                    alignItems: "flex-end",
+                    height: "auto",
+                  }}
                 >
                   <TextField
                     sx={{ flex: 1, mr: 1 }}

@@ -10,7 +10,7 @@ const gameController = {
   async startGame_post(req, res) {
     try {
       const { opponent, self } = req.body;
-      const gameId = `${req.userid}${opponent}`;
+      const gameId = `${req.userid}${opponent.id}`;
       await service.post("/sendOpponentGame", {
         opponent,
         gameId,
@@ -19,7 +19,7 @@ const gameController = {
       activeGames[gameId] = {
         game: new Game(),
         player1: req.userid,
-        player2: opponent,
+        player2: opponent.id,
       };
 
       res.status(200).json({ gameId: gameId, message: "Success game started" });

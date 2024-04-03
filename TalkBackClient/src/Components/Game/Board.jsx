@@ -50,7 +50,7 @@ export default function Board() {
     }
   };
   const handleInit = async (gameId, oponnent) => {
-    console.log("game id :" + gameId);
+    console.log(oponnent);
     gameManager.gameId = gameId;
     gameManager.opponent = oponnent;
     setPlayer("O");

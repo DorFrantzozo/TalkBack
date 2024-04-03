@@ -18,11 +18,14 @@ const gameManager = {
   async handleStartGame(opponent, self) {
     try {
       gameSocket.connect();
-      gameSocket.emit("mount", self);
+      gameSocket.emit("mount", { self: self.id });
       console.log(opponent);
       service.defaults.headers.common["Authorization"] = AuthAccessToken;
       this.opponent = opponent;
-      const response = await service.post("/startgame", { opponent });
+      const response = await service.post("/startgame", {
+        opponent,
+        self,
+      });
       const { gameId } = response.data;
       this.gameId = gameId;
       this.playerTurn = true;

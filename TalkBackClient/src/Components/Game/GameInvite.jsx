@@ -14,6 +14,7 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+// eslint-disable-next-line react/prop-types
 export default function AlertDialogSlide({ user, open, setOpen }) {
   const navigate = useNavigate();
   const auth = React.useContext(AuthContext);
@@ -26,7 +27,8 @@ export default function AlertDialogSlide({ user, open, setOpen }) {
   const handleAgreeToPlay = () => {
     setOpen(false);
     console.log(user);
-    gameManager.handleStartGame(user.id, auth.user.id);
+    console.log(auth.user);
+    gameManager.handleStartGame(user, auth.user);
     userSocket.emit("AcceptInvite", user);
     navigate("/game");
   };

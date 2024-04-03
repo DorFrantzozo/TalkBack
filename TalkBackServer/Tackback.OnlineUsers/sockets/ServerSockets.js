@@ -34,9 +34,9 @@ const serverSocket = {
     console.log("initialize User Socket");
     this.gameNamespace = this.io.of("/game");
     this.gameNamespace.on("connection", (socket) => {
-      const handleMount = (userid) => {
-        this.activeGamePlayers[userid] = socket.id;
-        console.log(`Active Game User ${userid}: ${socket.id}`);
+      const handleMount = (user) => {
+        this.activeGamePlayers[user.id] = socket.id;
+        console.log(`Active Game User ${user.id}: ${socket.id}`);
       };
       const handleUnMount = () => {
         const key = Object.keys(this.activeGamePlayers).find(

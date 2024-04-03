@@ -19,10 +19,8 @@ const gameHandler = {
     serverSocket.gameNamespace.to(opponentSocket).emit("endGame", winner);
   },
   handleStartGame(opponent, gameId, self) {
-    const opponentSocket = serverSocket.activeGamePlayers[opponent];
-    serverSocket.gameNamespace
-      .to(opponentSocket)
-      .emit("init", gameId, serverSocket.activeGamePlayers[self]);
+    const opponentSocket = serverSocket.activeGamePlayers[opponent.id];
+    serverSocket.gameNamespace.to(opponentSocket).emit("init", gameId, self);
     console.log("Game Started...");
   },
 };
