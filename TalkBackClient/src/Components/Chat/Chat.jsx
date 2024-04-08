@@ -31,12 +31,20 @@ export default function Chat() {
   useEffect(() => {
     // Listen for 'receiveMessage' event from the server
     userSocket.on("receiveMessage", handleReceiveMessage);
+    userSocket.on("receiveInvite", handleGameInvite);
+    userSocket.on("inviteAccepted", handleGameAccepted);
+    gameSocket.on("valid", startgame);
 
     // Clean up socket connection on component unmount
     return () => {
       userSocket.off("receiveMessage", handleReceiveMessage);
+      userSocket.off("receiveInvite", handleGameInvite);
+      userSocket.off("inviteAccepted", handleGameAccepted);
+      gameSocket.off("valid", startgame);
     };
   }, []);
+
+  const startgame = (user) => {};
 
   const handlesendMessage = async () => {
     if (messageInput.trim() !== "") {
@@ -54,7 +62,7 @@ export default function Chat() {
       }
       setMessages((perv) => [
         ...perv,
-        { isSelf: true, message: messageInput, sender: auth.user },
+        { isSelf: true, message: messageInput, sender: selectedUser.user },
       ]);
 
       // userSocket.emit("sendMessage", messageInput, selectedUser);
@@ -80,7 +88,9 @@ export default function Chat() {
       return [];
     }
     const filtered = messages.filter(
-      (message) => message.sender.id === selectedUser.user.id || message.isSelf
+      (message) =>
+        message.sender.id === selectedUser.user.id ||
+        (message.isSelf && message.sender.id === selectedUser.user.id)
     );
     return filtered;
   };
@@ -96,16 +106,9 @@ export default function Chat() {
   const handleGameAccepted = async (sender) => {
     gameSocket.connect();
     const self = await getUser();
-    console.log(self);
-    console.log(sender);
     gameSocket.emit("mount", self.id, sender);
-
     navigate("/game");
   };
-  useEffect(() => {
-    userSocket.on("receiveInvite", handleGameInvite);
-    userSocket.on("inviteAccepted", handleGameAccepted);
-  }, []);
 
   return (
     <>

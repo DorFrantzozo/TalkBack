@@ -6,10 +6,12 @@ import DialogContent from "@mui/material/DialogContent";
 import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 import Slide from "@mui/material/Slide";
+import { userSocket } from "../../services/userSocketService";
 import gameManager from "../../services/gameService";
 import { AuthContext } from "../../context/authContext";
-import { userSocket } from "../../services/userSocketService";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+
 const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
@@ -17,7 +19,8 @@ const Transition = React.forwardRef(function Transition(props, ref) {
 // eslint-disable-next-line react/prop-types
 export default function AlertDialogSlide({ user, open, setOpen }) {
   const navigate = useNavigate();
-  const auth = React.useContext(AuthContext);
+  const auth = useContext(AuthContext);
+
   const handleClose = () => {
     setOpen(false);
   };
@@ -26,10 +29,11 @@ export default function AlertDialogSlide({ user, open, setOpen }) {
   };
   const handleAgreeToPlay = () => {
     setOpen(false);
-    gameManager.handleStartGame(user, auth.user);
     userSocket.emit("AcceptInvite", user);
+    gameManager.handleStartGame(user, auth.user);
     navigate("/game");
   };
+
   return (
     <React.Fragment>
       <Dialog

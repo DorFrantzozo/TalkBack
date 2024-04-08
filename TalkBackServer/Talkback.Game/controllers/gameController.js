@@ -26,7 +26,6 @@ const gameController = {
 
       res.status(200).json({ gameId: gameId, message: "Success game started" });
     } catch (error) {
-      console.log(error);
       res.status(401).json({ error: "player denied the game request" }); // Send error response to client
     }
   },
@@ -60,7 +59,9 @@ const gameController = {
               ? activeGames[gameId].player2
               : activeGames[gameId].player1,
         });
+        activeGames[gameId].game.handleResetGame();
         delete activeGames[gameId];
+        console.log(activeGames[gameId]);
       }
       res
         .status(200)

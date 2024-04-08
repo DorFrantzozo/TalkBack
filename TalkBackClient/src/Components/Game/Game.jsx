@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import Board from "./Board";
 import "./ticTacToe.css";
 import { Box, Typography } from "@mui/material";
@@ -6,12 +6,14 @@ import gameManager, { gameSocket } from "../../services/gameService";
 
 export default function Game() {
   const [opponent, setOpponent] = useState(gameManager.opponent);
+  
   useEffect(() => {
     gameSocket.on("init", handleInit);
     return () => {
       gameSocket.off("init", handleInit);
     };
   }, []);
+
   const handleInit = async (gameId, opponent) => {
     console.log(gameId, opponent);
     gameManager.gameId = gameId;

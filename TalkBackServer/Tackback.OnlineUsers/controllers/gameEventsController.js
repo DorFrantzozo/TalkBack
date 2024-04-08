@@ -9,7 +9,6 @@ const gameController = {
       gameHandler.handleStartGame(opponent, gameId, self);
       res.sendStatus(200);
     } catch (error) {
-      console.log(error);
       res.sendStatus(403);
     }
   },

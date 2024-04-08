@@ -24,7 +24,7 @@ const gameHandler = {
       if (key) {
         console.log("disconnected:unMount");
         const opponentKey = serverSocket.activeGamePlayers[key].opponent.id;
-        console.log(activeGamePlayers[opponentKey]);
+        console.log(activeGamePlayers);
         const user = serverSocket.activeGamePlayers[opponentKey].id;
         if (serverSocket.activeGamePlayers[opponentKey]) {
           const winner = true;
@@ -50,7 +50,7 @@ const gameHandler = {
   },
   handleStartGame(opponent, gameId, self) {
     console.log("opponent");
-    console.log(opponent);
+    console.log(serverSocket.activeGamePlayers);
 
     console.log(serverSocket.activeGamePlayers[opponent.id]);
     const opponentSocket = serverSocket.activeGamePlayers[opponent.id].id;

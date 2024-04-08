@@ -58,6 +58,7 @@ const gameManager = {
         }
         this.board = newBoard;
         if (winner) {
+          this.handleResetGame();
           return winner;
         }
         this.playerTurn = !this.playerTurn;
@@ -73,7 +74,13 @@ const gameManager = {
       gameSocket.disconnect();
     }
   },
-
+  handleResetGame() {
+    this.board = Array(9).fill("");
+    this.gameId = null;
+    this.playerTurn = false;
+    this.opponent = null;
+    this.self = null;
+  },
   handleAlert(alert) {
     if (alert) {
       if (alert !== "lost") {

@@ -33,11 +33,10 @@ export default function Board() {
       } else {
         gameManager.handleAlert("won");
       }
-      navigate("/chat");
-      return;
     } else {
       gameManager.handleAlert("lost");
     }
+    gameManager.handleResetGame();
     navigate("/chat");
   };
   const handleOpponentTurn = async (newBoard) => {
