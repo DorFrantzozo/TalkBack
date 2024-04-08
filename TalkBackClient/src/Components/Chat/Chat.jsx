@@ -93,10 +93,12 @@ export default function Chat() {
     setSender(sender);
     setOpenModal(true);
   };
-  const handleGameAccepted = async () => {
+  const handleGameAccepted = async (sender) => {
     gameSocket.connect();
     const self = await getUser();
-    gameSocket.emit("mount", self.id);
+    console.log(self);
+    console.log(sender);
+    gameSocket.emit("mount", self.id, sender);
 
     navigate("/game");
   };

@@ -1,4 +1,5 @@
 import axios from "axios";
+import { toast } from "react-toastify";
 import { AuthAccessToken } from "./authService";
 import { userSocket } from "./userSocketService";
 const CHAT_API_URL = "http://localhost:3002";
@@ -28,4 +29,28 @@ export const handleSendeMessage = async (messageInput, selectedUser) => {
     console.log("message didnt Send" + error);
     return false;
   }
+};
+export const handleAlertMessageSuccess = async () => {
+  toast.success(`Message Sended!`, {
+    position: "top-center",
+    autoClose: 4000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+};
+export const handleAlertMessageError = async () => {
+  toast.error(`Message didnt Sended!`, {
+    position: "top-center",
+    autoClose: 4000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: false,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
 };

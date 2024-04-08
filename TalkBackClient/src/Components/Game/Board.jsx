@@ -5,7 +5,6 @@ import Square from "./Square";
 import { useNavigate } from "react-router-dom";
 import "./ticTacToe.css";
 import gameManager, { gameSocket } from "../../services/gameService";
-import { Typography } from "@mui/material";
 // eslint-disable-next-line react/prop-types
 export default function Board() {
   const navigate = useNavigate();
@@ -24,11 +23,20 @@ export default function Board() {
   }, []);
 
   const handleEndGame = async (winner) => {
+    gameSocket.emit("unMount");
     gameSocket.disconnect();
-    if (winner === "draw") {
-      alert("you draw");
+    console.log(winner);
+    if (winner) {
+      console.log(winner);
+      if (winner === "draw") {
+        gameManager.handleAlert("draw");
+      } else {
+        gameManager.handleAlert("won");
+      }
+      navigate("/chat");
+      return;
     } else {
-      alert("you Lost");
+      gameManager.handleAlert("lost");
     }
     navigate("/chat");
   };
@@ -42,22 +50,17 @@ export default function Board() {
     setBoard(gameManager.board);
     console.log(gameManager.board);
     if (winner) {
+      gameSocket.emit("unMount");
       gameSocket.disconnect();
       if (winner === "draw") {
-        alert("you draw");
+        gameManager.handleAlert("draw");
       } else {
-        alert("you won");
+        gameManager.handleAlert("won");
       }
       navigate("/chat");
     }
   };
-  // const handleInit = async (gameId, oponnent) => {
-  //   console.log(oponnent);
-  //   gameManager.gameId = gameId;
-  //   gameManager.opponent = oponnent;
-  //   console.log(oponnent);
-  //   // setPlayer("O");
-  // };
+
   return (
     <>
       <Box className="board">

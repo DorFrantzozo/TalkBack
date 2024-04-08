@@ -10,6 +10,8 @@ const gameController = {
   async startGame_post(req, res) {
     try {
       const { opponent, self } = req.body;
+      console.log("contol");
+      console.log(opponent);
       const gameId = `${req.userid}${opponent.id}`;
       await service.post("/sendOpponentGame", {
         opponent,
@@ -24,6 +26,7 @@ const gameController = {
 
       res.status(200).json({ gameId: gameId, message: "Success game started" });
     } catch (error) {
+      console.log(error);
       res.status(401).json({ error: "player denied the game request" }); // Send error response to client
     }
   },
@@ -49,7 +52,6 @@ const gameController = {
             ? activeGames[gameId].player2
             : activeGames[gameId].player1,
       });
-      console.log("winner - " + winner);
       if (winner) {
         await service.post("/endGame", {
           winner,

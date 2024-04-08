@@ -15,13 +15,16 @@ const gameManager = {
   gameId: null,
   playerTurn: false,
   opponent: null,
+  self: null,
   async handleStartGame(opponent, self) {
     try {
       gameSocket.connect();
-      gameSocket.emit("mount", self.id);
+      console.log("Client side - ");
       console.log(opponent);
+      gameSocket.emit("mount", self.id, opponent);
       service.defaults.headers.common["Authorization"] = AuthAccessToken;
       this.opponent = opponent;
+      this.self = self;
       const response = await service.post("/startgame", {
         opponent,
         self,
@@ -34,6 +37,7 @@ const gameManager = {
         console.log(error);
         return;
       }
+      console.log(error);
       gameSocket.disconnect();
       throw error;
     }
@@ -71,19 +75,32 @@ const gameManager = {
   },
 
   handleAlert(alert) {
-    if (alert.isEnded)
-      toast.success(`${alert.name} Won the game!`, {
-        position: "top-center",
-        autoClose: 4000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: false,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
-    else
-      toast.error(`${alert.name} disconnected, game closed!`, {
+    if (alert) {
+      if (alert !== "lost") {
+        toast.success(`you ${alert} the game!`, {
+          position: "top-center",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      } else {
+        toast.error(`you Lost the game!`, {
+          position: "top-center",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
+      }
+    } else
+      toast.error(`${this.opponent.name} disconnected, game closed!`, {
         position: "top-center",
         autoClose: 4000,
         hideProgressBar: false,

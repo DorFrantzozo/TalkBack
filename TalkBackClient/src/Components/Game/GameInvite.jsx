@@ -26,8 +26,6 @@ export default function AlertDialogSlide({ user, open, setOpen }) {
   };
   const handleAgreeToPlay = () => {
     setOpen(false);
-    console.log(user);
-    console.log(auth.user);
     gameManager.handleStartGame(user, auth.user);
     userSocket.emit("AcceptInvite", user);
     navigate("/game");

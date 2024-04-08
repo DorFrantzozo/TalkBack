@@ -34,19 +34,7 @@ const serverSocket = {
     console.log("initialize User Socket");
     this.gameNamespace = this.io.of("/game");
     this.gameNamespace.on("connection", (socket) => {
-      const handleMount = (user) => {
-        this.activeGamePlayers[user.id] = socket.id;
-        console.log(`Active Game User ${user.id}: ${socket.id}`);
-      };
-      const handleUnMount = () => {
-        const key = Object.keys(this.activeGamePlayers).find(
-          (key) => this.activeGamePlayers[key] === socket.id
-        );
-        console.log(`Deactivate Game User ${key}: ${socket.id}`);
-        delete this.activeGamePlayers[key];
-      };
-      socket.on("mount", handleMount);
-      socket.on("disconnect", handleUnMount);
+      GameHandler.eventsRegister(socket);
     });
     console.log("initialize Game Socket");
   },

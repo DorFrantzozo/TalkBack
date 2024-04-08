@@ -13,9 +13,9 @@ export default function Game() {
     };
   }, []);
   const handleInit = async (gameId, opponent) => {
+    console.log(gameId, opponent);
     gameManager.gameId = gameId;
     gameManager.opponent = opponent;
-    console.log(gameManager.opponent);
     setOpponent(opponent);
   };
   return (
