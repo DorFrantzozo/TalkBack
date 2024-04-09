@@ -24,7 +24,6 @@ const gameHandler = {
       if (key) {
         console.log("disconnected:unMount");
         const opponentKey = serverSocket.activeGamePlayers[key].opponent.id;
-        console.log(activeGamePlayers);
         const user = serverSocket.activeGamePlayers[opponentKey].id;
         if (serverSocket.activeGamePlayers[opponentKey]) {
           const winner = true;
@@ -46,7 +45,8 @@ const gameHandler = {
   },
   handleEndGame(winner, opponent) {
     const opponentSocket = serverSocket.activeGamePlayers[opponent].id;
-    serverSocket.gameNamespace.to(opponentSocket).emit("endGame", false);
+    const state = winner === "draw" ? "draw" : false;
+    serverSocket.gameNamespace.to(opponentSocket).emit("endGame", state);
   },
   handleStartGame(opponent, gameId, self) {
     console.log("opponent");

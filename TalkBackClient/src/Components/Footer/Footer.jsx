@@ -1,4 +1,3 @@
-import React from "react";
 import myLogo from "../../assets/Images/Logo.png";
 import { Container, Typography } from "@mui/material";
 import Box from "@mui/material/Box";

@@ -1,50 +1,59 @@
 import MyChat from "./MyChat";
 import HisChat from "./HisChat";
-import React, { useContext } from "react";
+import React from "react";
 import { Box, TextField, Typography, Button } from "@mui/material";
 import Contacts from "./Contacts";
 import Grid from "@mui/material/Grid";
 import SendIcon from "@mui/icons-material/Send";
 import { ThemeProvider } from "@mui/material/styles";
 import { theme } from "../../assets/Themes/colors";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { userSocket } from "../../services/userSocketService";
 import CasinoIcon from "@mui/icons-material/Casino";
 import GameInvite from "../Game/GameInvite";
 import Divider from "@mui/material/Divider";
-import { handleSendeMessage } from "../../services/chatService";
-import { AuthContext } from "../../context/authContext";
+import {
+  handleSendeMessage,
+  handleAlertNewMessage,
+} from "../../services/chatService";
 import { useNavigate } from "react-router-dom";
 import { gameSocket } from "../../services/gameService";
 import { getUser } from "../../services/authService";
 
 export default function Chat() {
-  const [hasNewMessage, setHasNewMessage] = useState(false);
-  const [selectedUser, setSelectedUser] = useState({});
+  const selectedUser = useRef(null);
   const [messageInput, setMessageInput] = useState("");
   const [messages, setMessages] = useState([]);
   const [showTextField, setShowTextField] = useState(false);
   const [openModal, setOpenModal] = React.useState(false);
   const [sender, setSender] = useState(null);
   const navigate = useNavigate();
-  const auth = useContext(AuthContext);
+  const messagesEndRef = useRef();
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
+  // const auth = useContext(AuthContext);
   useEffect(() => {
     // Listen for 'receiveMessage' event from the server
     userSocket.on("receiveMessage", handleReceiveMessage);
     userSocket.on("receiveInvite", handleGameInvite);
     userSocket.on("inviteAccepted", handleGameAccepted);
-    gameSocket.on("valid", startgame);
-
+    console.log("mount");
     // Clean up socket connection on component unmount
     return () => {
       userSocket.off("receiveMessage", handleReceiveMessage);
       userSocket.off("receiveInvite", handleGameInvite);
       userSocket.off("inviteAccepted", handleGameAccepted);
-      gameSocket.off("valid", startgame);
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const startgame = (user) => {};
+  useEffect(() => {
+    console.log(selectedUser);
+  }, [selectedUser]);
 
   const handlesendMessage = async () => {
     if (messageInput.trim() !== "") {
@@ -52,7 +61,7 @@ export default function Chat() {
       console.log("here");
       const messageStatus = await handleSendeMessage(
         messageInput,
-        selectedUser
+        selectedUser.current
       );
 
       console.log(messageStatus);
@@ -62,41 +71,50 @@ export default function Chat() {
       }
       setMessages((perv) => [
         ...perv,
-        { isSelf: true, message: messageInput, sender: selectedUser.user },
+        {
+          isSelf: true,
+          message: messageInput,
+          sender: selectedUser.current.user,
+        },
       ]);
 
       // userSocket.emit("sendMessage", messageInput, selectedUser);
       setMessageInput("");
     }
   };
-  const handleReceiveMessage = (message, sender) => {
-    console.log(message, sender);
-    if (selectedUser !== sender.id) {
-      setHasNewMessage(true);
-    }
-    setMessages((perv) => [...perv, { isSelf: false, message, sender }]);
+  const setSelectedUser = (selected) => {
+    selectedUser.current = selected;
   };
-
   const handleSelected = (selected) => {
+    if (selectedUser.current && selected.key === selectedUser.current.key)
+      return;
+    setSelectedUser(selected);
     setShowTextField(true);
-    const user = JSON.parse(selected);
-    setSelectedUser(user);
   };
-
+  const handleReceiveMessage = async (message, sender) => {
+    setMessages((perv) => [...perv, { isSelf: false, message, sender }]);
+    const selected = selectedUser.current;
+    if (!selected || selectedUser.current.user.id !== sender.id) {
+      handleAlertNewMessage(sender.name);
+    }
+  };
   const handleChatMessages = () => {
-    if (Object.keys(selectedUser).length === 0) {
+    if (!selectedUser.current) {
+      return [];
+    }
+    if (Object.keys(selectedUser.current).length === 0) {
       return [];
     }
     const filtered = messages.filter(
       (message) =>
-        message.sender.id === selectedUser.user.id ||
-        (message.isSelf && message.sender.id === selectedUser.user.id)
+        message.sender.id === selectedUser.current.user.id ||
+        (message.isSelf && message.sender.id === selectedUser.current.user.id)
     );
     return filtered;
   };
 
   const handleInvite = () => {
-    userSocket.emit("sendInvite", selectedUser);
+    userSocket.emit("sendInvite", selectedUser.current);
   };
 
   const handleGameInvite = (sender) => {
@@ -149,11 +167,11 @@ export default function Chat() {
                 variant="h4"
                 sx={{ display: "flex", justifyContent: "center", mb: "20px" }}
               >
-                {selectedUser && selectedUser.user
-                  ? selectedUser.user.name
+                {selectedUser.current && selectedUser.current.user
+                  ? selectedUser.current.user.name
                   : ""}
 
-                {selectedUser && selectedUser.user && (
+                {selectedUser.current && selectedUser.current.user && (
                   <Button
                     endIcon={<CasinoIcon />}
                     onClick={handleInvite}
@@ -163,7 +181,7 @@ export default function Chat() {
                   </Button>
                 )}
               </Typography>
-              <Box>
+              <Box sx={{ height: "60vh", overflowY: "auto" }}>
                 {handleChatMessages().map((data, index) =>
                   data.isSelf ? (
                     <MyChat key={index} data={JSON.stringify(data)} />
@@ -171,6 +189,7 @@ export default function Chat() {
                     <HisChat key={index} data={JSON.stringify(data)} />
                   )
                 )}
+                <div ref={messagesEndRef} />
               </Box>
               {showTextField && (
                 <Box

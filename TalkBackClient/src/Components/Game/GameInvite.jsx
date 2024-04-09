@@ -1,3 +1,4 @@
+/* eslint-disable react/prop-types */
 import * as React from "react";
 import Button from "@mui/material/Button";
 import Dialog from "@mui/material/Dialog";
@@ -43,7 +44,7 @@ export default function AlertDialogSlide({ user, open, setOpen }) {
         onClose={handleClose}
         aria-describedby="alert-dialog-slide-description"
       >
-        <DialogTitle>{`${user.name} \n wants to play Backgramoon`}</DialogTitle>
+        <DialogTitle>{`${user.name} \n wants to play TicTacToe`}</DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-slide-description"></DialogContentText>
         </DialogContent>

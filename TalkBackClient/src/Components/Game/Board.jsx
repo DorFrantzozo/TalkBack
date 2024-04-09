@@ -9,17 +9,15 @@ import gameManager, { gameSocket } from "../../services/gameService";
 export default function Board() {
   const navigate = useNavigate();
   const [board, setBoard] = useState(Array(9).fill(""));
-  // const [player, setPlayer] = useState("X");
   useEffect(() => {
-    // gameSocket.on("init", handleInit);
     gameSocket.on("opponentTurn", handleOpponentTurn);
     gameSocket.on("endGame", handleEndGame);
 
     return () => {
-      // gameSocket.off("init", handleInit);
       gameSocket.off("opponentTurn", handleOpponentTurn);
       gameSocket.off("endGame", handleEndGame);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleEndGame = async (winner) => {
@@ -29,6 +27,7 @@ export default function Board() {
     if (winner) {
       console.log(winner);
       if (winner === "draw") {
+        console.log("draw");
         gameManager.handleAlert("draw");
       } else {
         gameManager.handleAlert("won");
@@ -52,6 +51,7 @@ export default function Board() {
       gameSocket.emit("unMount");
       gameSocket.disconnect();
       if (winner === "draw") {
+        console.log("draw2");
         gameManager.handleAlert("draw");
       } else {
         gameManager.handleAlert("won");

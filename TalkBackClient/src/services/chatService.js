@@ -30,27 +30,15 @@ export const handleSendeMessage = async (messageInput, selectedUser) => {
     return false;
   }
 };
-export const handleAlertMessageSuccess = async () => {
-  toast.success(`Message Sended!`, {
-    position: "top-center",
+export const handleAlertNewMessage = async (sender) => {
+  toast.info(`${sender} send you a message!`, {
+    position: "top-right",
     autoClose: 4000,
     hideProgressBar: false,
     closeOnClick: true,
     pauseOnHover: false,
     draggable: true,
     progress: undefined,
-    theme: "light",
-  });
-};
-export const handleAlertMessageError = async () => {
-  toast.error(`Message didnt Sended!`, {
-    position: "top-center",
-    autoClose: 4000,
-    hideProgressBar: false,
-    closeOnClick: true,
-    pauseOnHover: false,
-    draggable: true,
-    progress: undefined,
-    theme: "light",
+    theme: "colored",
   });
 };

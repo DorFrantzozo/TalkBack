@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-import * as React from "react";
 import Stack from "@mui/material/Stack";
 import { Avatar, Box, Paper, Typography } from "@mui/material";
 
@@ -7,8 +6,6 @@ export default function HisChat({ data }) {
   const { sender, message } = JSON.parse(data);
   return (
     <Stack spacing={3}>
-      {/* For variant="text", adjust the height via font-size */}
-
       <Box sx={{ display: "flex", flexDirection: "row-reverse" }}>
         <Avatar src="/static/images/avatar/2.jpg" />
 

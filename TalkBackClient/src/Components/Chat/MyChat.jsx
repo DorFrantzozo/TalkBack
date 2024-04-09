@@ -1,4 +1,3 @@
-import * as React from "react";
 import Stack from "@mui/material/Stack";
 import { Avatar, Box, Paper, Typography } from "@mui/material";
 // eslint-disable-next-line react/prop-types
@@ -6,8 +5,6 @@ export default function MyChat({ data }) {
   const { sender, message } = JSON.parse(data);
   return (
     <Stack spacing={3}>
-      {/* For variant="text", adjust the height via font-size */}
-
       <Box
         sx={{
           display: "flex",

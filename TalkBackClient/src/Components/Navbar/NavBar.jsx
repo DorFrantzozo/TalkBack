@@ -11,7 +11,7 @@ import Button from "@mui/material/Button";
 import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import myLogo from "../../assets/Images/Logo.png";
-import { useState, useContext, useEffect } from "react";
+import { useState, useContext } from "react";
 import { theme } from "../../assets/Themes/colors";
 import { ThemeProvider } from "@emotion/react";
 import { Link } from "react-router-dom";

@@ -1,4 +1,5 @@
-import React, { useContext } from "react";
+/* eslint-disable react/no-unescaped-entities */
+import { useContext } from "react";
 import { Button, Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
@@ -19,7 +20,7 @@ const Landing = () => {
             "linear-gradient(rgba(0, 0, 0, 0.527),rgba(0, 0, 0, 0.7)) ,url('../src/assets/Images/bg1.jpg')",
           backgroundRepeat: "no-repeat",
           backgroundSize: "cover",
-          minHeight: "100vh", // Set minimum height to cover full viewport
+          minHeight: "100vh",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -32,7 +33,7 @@ const Landing = () => {
               color: "white",
               textAlign: "center",
               marginBottom: "19px",
-              paddingTop: { xs: "100px", md: "170px" }, // Adjust padding for different screen sizes
+              paddingTop: { xs: "100px", md: "170px" },
             }}
           >
             Chat and play Backgammon

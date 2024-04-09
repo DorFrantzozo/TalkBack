@@ -83,18 +83,7 @@ const gameManager = {
   },
   handleAlert(alert) {
     if (alert) {
-      if (alert !== "lost") {
-        toast.success(`you ${alert} the game!`, {
-          position: "top-center",
-          autoClose: 4000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: false,
-          draggable: true,
-          progress: undefined,
-          theme: "colored",
-        });
-      } else {
+      if (alert === "lost") {
         toast.error(`you Lost the game!`, {
           position: "top-center",
           autoClose: 4000,
@@ -105,6 +94,30 @@ const gameManager = {
           progress: undefined,
           theme: "colored",
         });
+      } else {
+        if (alert === "draw") {
+          toast.warning(`you ${alert} the game!`, {
+            position: "top-center",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        } else {
+          toast.success(`you ${alert} the game!`, {
+            position: "top-center",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       }
     } else
       toast.error(`${this.opponent.name} disconnected, game closed!`, {
