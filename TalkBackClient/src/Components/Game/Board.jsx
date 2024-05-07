@@ -51,7 +51,6 @@ export default function Board() {
       gameSocket.emit("unMount");
       gameSocket.disconnect();
       if (winner === "draw") {
-        console.log("draw2");
         gameManager.handleAlert("draw");
       } else {
         gameManager.handleAlert("won");

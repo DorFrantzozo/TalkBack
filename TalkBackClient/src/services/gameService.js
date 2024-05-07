@@ -19,8 +19,6 @@ const gameManager = {
   async handleStartGame(opponent, self) {
     try {
       gameSocket.connect();
-      console.log("Client side - ");
-      console.log(opponent);
       gameSocket.emit("mount", self.id, opponent);
       service.defaults.headers.common["Authorization"] = AuthAccessToken;
       this.opponent = opponent;
@@ -34,10 +32,8 @@ const gameManager = {
       this.playerTurn = true;
     } catch (error) {
       if (error.response.status === 401) {
-        console.log(error);
         return;
       }
-      console.log(error);
       gameSocket.disconnect();
       throw error;
     }
@@ -46,7 +42,6 @@ const gameManager = {
     try {
       service.defaults.headers.common["Authorization"] = AuthAccessToken;
       if (this.playerTurn) {
-        console.log(this.playerTurn);
         const response = await service.post("/chooseSquare", {
           gameId: this.gameId,
           squareIndex,
@@ -63,12 +58,21 @@ const gameManager = {
         }
         this.playerTurn = !this.playerTurn;
       } else {
-        console.log("that not your turn");
+        toast.error(`that not your turn`, {
+          position: "top-center",
+          autoClose: 4000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+        });
       }
     } catch (error) {
       if (error.response.status === 400) {
         console.log("player disconnected");
-        this.handleAlert({ isEnded: false, name: this.opponent });
+        this.handleAlert();
       }
       console.log(error);
       gameSocket.disconnect();
